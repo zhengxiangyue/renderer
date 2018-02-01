@@ -1,0 +1,7 @@
+title		soccer ball
+detail		~/rooms/bedroom/props/soccer.det
+display		poly_zsort
+data_info	60 points 32 polygons
+bounding_box	-1 1  -1 1  -1 1
+type		polygon
+poly_colors	~daven/rooms/bedroom/props/soccer.pcl

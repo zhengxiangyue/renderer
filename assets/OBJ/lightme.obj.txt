@@ -1,0 +1,15 @@
+title		
+detail		/mnt/CISgrads/swhitman/car/lite.det
+data_info	0 points 0 polygons
+type		polygon 
+title		
+bounding_box	-.7729016 .6789952  .01929387 .1048717  -.2431464 .2177564
+display		scan
+# l.obj created by xfm s .355013 .361042 .335446 r 0 180 0 t 0.428711
+# -.11718 -.012695
+shader		blinn
+blinn_shininess	0.5
+color		.8 .8 .8
+shininess	200
+Kd		.7
+Ks		.3

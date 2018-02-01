@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/Cancel/Develop/c++/graphicAssignment/lib/matrix.h
+vector
+-
+iostream
+-
+
+/Users/Cancel/Develop/c++/graphicAssignment/lib/myGraphics.cpp
+myGraphics.h
+/Users/Cancel/Develop/c++/graphicAssignment/lib/myGraphics.h
+matrix.h
+/Users/Cancel/Develop/c++/graphicAssignment/lib/matrix.h
+
+/Users/Cancel/Develop/c++/graphicAssignment/lib/myGraphics.h
+vector
+-
+iostream
+-
+cmath
+-
+matrix.h
+/Users/Cancel/Develop/c++/graphicAssignment/lib/matrix.h
+

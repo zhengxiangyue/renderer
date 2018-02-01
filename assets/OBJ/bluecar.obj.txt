@@ -1,0 +1,13 @@
+detail		redcar.det
+data_info	904 points 879 polygons
+boundingbox	-0.815663 0.723785 -0.164351 0.293543 -0.307197 0.287885
+title /tmp/dgnew.obj
+poly_colors	bluecar.pcl
+type		polygon
+display		scan
+shader		blinn
+blinn_shininess	0.4
+type		polygon 
+color		.9 0 0
+Kd	 .33
+Ks	.67

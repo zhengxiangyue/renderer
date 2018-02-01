@@ -1,0 +1,7 @@
+title		
+display		scan
+detail		~daven/jamestop.det
+data_info	763 points 886 polygons 3240 edges
+bounding_box	-0.267339 0.269463  -0.3 0.557604  -0.268932 0.268932
+poly_colors	~daven/jamestop.pcl
+type		polygon 

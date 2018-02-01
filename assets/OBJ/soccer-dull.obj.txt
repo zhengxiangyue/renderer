@@ -1,0 +1,14 @@
+title		soccer
+display		scan
+detail		soccer.det
+type		polygon faceted
+bounding_box	-0.815663 0.762322 -0.161927 0.293543 -0.307197 0.287885
+color 		1 1 1
+#shader		gouraud
+#shader          phong
+shader		cook_torrance
+Kd		.8
+Ks		.2
+#blinn_shininess
+#shininess	300
+poly_colors	soccer-dull.pcl

@@ -1,0 +1,5 @@
+title		bench
+display		scan
+detail		/mnt/CISgrads/james/Dat/bench-big.det
+type		polygon
+bounding_box	-3.37812 3.37188 -3.07124 3.67876 -1.77291 1.60209

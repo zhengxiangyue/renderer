@@ -1,0 +1,17 @@
+title		
+detail		/mnt/CISgrads/swhitman/car/body.det
+data_info	0 points 0 polygons
+type		polygon 
+title		
+bounding_box	-.7798598 .760918  -.09838921 .2958159  -.3078741 .2824841
+display		/mnt/staff/scott/scan/v2scan
+# b.obj created by xfm s .355013 .361042 .335446 r 0 180 0 t 0.428711
+# -.11718 -.012695
+shader		blinn
+blinn_shininess	0.15
+type		polygon 
+color		.9 0 0
+#  /mnt/staff/jeff/car/roof.obj created by xfm r -90 0 0
+Kd	 .25
+Ks	.75
+

@@ -1,0 +1,16 @@
+title		floor
+# Grid parameters - 0.000000 13.000000 0.000000 13.000000 13 13 0.000000
+#display         scan
+display		poly_zsort
+detail		floor.det
+polycolors	floor.pcl
+boundingbox	0 13 0 13 0 0
+data_info	196 points 169 polygons 676 edges
+type		polygon
+shader		cook_torrance
+Kd		.2
+Ks		.8
+ambient		.15
+shininess	50
+blinn_shininess	0.25
+

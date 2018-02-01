@@ -1,0 +1,5 @@
+title		rect
+display		scan
+detail		/mnt/CISgrads/james/Dat/rect.det
+type		polygon
+bounding_box	-5 5 -0.4 0.4 -2 2

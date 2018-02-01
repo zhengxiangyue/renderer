@@ -1,0 +1,12 @@
+title		a car
+display		scan
+detail		car.det
+type		polygon
+bounding_box	-0.815663 0.762322 -0.161927 0.293543 -0.307197 0.287885
+shader		cook_torrance
+Kd		.2
+Ks		.8
+ambient		.15
+shininess	80
+blinn_shininess	0.25
+type		polygon 

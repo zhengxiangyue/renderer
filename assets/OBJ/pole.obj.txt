@@ -1,0 +1,6 @@
+detail		pole.det
+boundingbox	-0.0605565 0.0605565 0.00163666 0.957447 -0.0605565 0.0605565
+data_info	80 points 60 polygons 240 edges
+display		cat
+title data made from (H)ACCKK DG
+type		polygon

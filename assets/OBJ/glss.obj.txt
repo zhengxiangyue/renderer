@@ -1,0 +1,20 @@
+title		
+detail		/mnt/CISgrads/swhitman/car/glass.det
+data_info	0 points 0 polygons
+type		polygon 
+title		
+bounding_box	-.7032125 .2305676  .1335817 .2745506  -.280505 .255115
+display		scan
+# g.obj created by xfm s .355013 .361042 .335446 r 0 180 0 t 0.428711
+# -.11718 -.012695
+shader		blinn
+blinn_shininess	0.1
+color		.2 .2 .2
+shininess	100
+title		
+data_info	0 points 0 polygons
+bounding_box	2.2819 3.1884  .74694 1.0709  -.61596 .61596
+# /mnt/staff/jeff/car/hatch_glass.obj created by xfm r -90 0 0
+Kd	.3
+Ks	.7
+

@@ -1,0 +1,5 @@
+title		rect-skinny
+display		scan
+detail		/mnt/CISgrads/james/Dat/floor.det
+type		polygon
+bounding_box	0 13 0 13 0 0

@@ -1,0 +1,14 @@
+title		
+detail		/mnt/CISgrads/swhitman/car/hubcap.det
+data_info	0 points 0 polygons
+type		polygon 
+display		scan
+shader		cook_torrance
+color		.8 .8 .9
+blinn_shininess	.25
+Kd		.2
+Ks		.8
+title		
+bounding_box	-.5541602 .469022  -.1350685 .01624199  -.3105392 .2851492
+# h.obj created by xfm s .355013 .361042 .335446 r 0 180 0 t 0.428711
+# -.11718 -.012695

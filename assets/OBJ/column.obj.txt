@@ -1,0 +1,12 @@
+title		a column
+display		scan
+detail		column.det
+type		polygon
+bounding_box	-0.163987 0.163987 -0.999157 0.620845 -0.16418 0.164178
+shader		blinn
+Kd		.5
+Ks		.5
+ambient		.15
+shininess	50
+blinn_shininess	0.25
+type		polygon 

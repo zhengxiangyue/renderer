@@ -1,0 +1,16 @@
+detail		/mnt/CISgrads/swhitman/car/tail_light.det
+data_info	0 points 0 polygons
+title		
+display		scan
+shader		blinn
+blinn_shininess	0.25
+type		polygon 
+color		.8 .2 0
+shininess	200
+#		/mnt/staff/jeff/car/tail_light.obj created by xfm r -90 0 0
+Kd		.4
+Ks		.6
+title		
+bounding_box	-.7729016 -.718336  .06277055 .1093052  -.2758423 .2504523
+# tl.obj created by xfm s .355013 .361042 .335446 r 0 180 0 t 0.428711
+# -.11718 -.012695

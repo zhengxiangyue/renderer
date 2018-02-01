@@ -1,0 +1,5 @@
+title		ship_stdn.det: points, polys in y from -0.559500 -> 1.000000
+detail		ship_stdn_knfd.det
+data_info	184 points 176 polygons
+bounding_box	-0.146944 0.146944  -0.559174 1  -0.146944 0.146944
+type		polygon 

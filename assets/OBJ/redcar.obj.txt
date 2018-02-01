@@ -1,0 +1,6 @@
+detail		/mnt/art_ed/wilson/hahn/redcar.det
+data_info	904 points 879 polygons
+boundingbox	-0.815663 0.723785 -0.164351 0.293543 -0.307197 0.287885
+title /tmp/dgnew.obj
+poly_colors	/mnt/art_ed/wilson/hahn/redcar.pcl
+type		polygon

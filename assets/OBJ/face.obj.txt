@@ -1,0 +1,4 @@
+title          face
+data_info      334 points  476 polygons
+bounding_box   -1.099350 1.136610,  -1.274740 1.005660,  -0.605151 3.624850
+type           polygonal

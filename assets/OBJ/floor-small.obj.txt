@@ -1,0 +1,7 @@
+# Grid parameters - 0.000000 13.000000 0.000000 13.000000 26 26 0.000000
+detail		~james/floor-small.det
+boundingbox	0 13 0 13 0 0
+data_info	729 points 676 polygons 2704 edges
+title floor-small.obj
+display		poly_zsort
+type		polygon

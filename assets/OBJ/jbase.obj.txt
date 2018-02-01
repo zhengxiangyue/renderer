@@ -1,0 +1,21 @@
+title		column base
+detail		/mnt/staff/jcd/james/base.det
+display		scan
+data_info	16 points 13 polygons 48 edges
+type		polygon faceted
+#shader		gouraud
+#color		1 1 1
+color		0.1 0.1 0.35
+#shader		cook_torrance
+shader		gouraud
+#shader		phong
+#shader		blinn
+shininess	50
+#blinn_shininess	0.3
+Kd		.3
+Ks		.9
+index		10
+attributes	faceted
+#		base.obj created by xfm s 1.8 1.8 1.8
+bounding_box	-0.129868 0.129868  -0.999157 -0.778246  -0.12885 0.128845
+# base.obj created by xfm t 0 -.999155 -1.6418
