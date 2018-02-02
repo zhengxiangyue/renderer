@@ -1,4 +1,3 @@
-#include <iostream>
 #include "homework1.h"
 using namespace std;
 
@@ -31,10 +30,7 @@ void render_scene();
  * @param width
  * @param height
  */
-void prevent_resize(int width, int height) {
-    // we ignore the params and do:
-    glutReshapeWindow( width, height);
-}
+void prevent_resize(int width, int height);
 
 /**
  * Callback function for dispalying
@@ -133,6 +129,10 @@ void render_scene() {
     }
 }
 
+void prevent_resize(int width, int height)  {
+    glutReshapeWindow( width, height);
+}
+
 void glut_display()  {
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -186,13 +186,14 @@ void keyboardFunc(unsigned char key, int x, int y ) {
 }
 
 void glut_helper(int argn, char **arguments)  {
+
     glutInit(&argn, arguments);
 
     glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
 
     glutInitWindowPosition(100, 100);
 
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(1000, 1000);
 
     glutCreateWindow("Graphics II - Assignment 1");
 
@@ -203,5 +204,6 @@ void glut_helper(int argn, char **arguments)  {
     glutDisplayFunc(&glut_display);
 
     glutMainLoop();
+
 }
 
