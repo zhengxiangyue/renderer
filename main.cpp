@@ -187,6 +187,19 @@ void keyboardFunc(unsigned char key, int x, int y ) {
         case 'r':
             hk1.camera_position.z ++;
             break;
+        case 'v':
+            hk1.camera_position.y ++;
+            break;
+        case 'b':
+            hk1.camera_position.y --;
+            break;
+        case 'd':
+            hk1.camera_position.x ++;
+            break;
+        case 'f':
+            hk1.camera_position.x --;
+            break;
+
     }
 
     render_scene();
