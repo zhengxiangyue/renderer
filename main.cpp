@@ -169,9 +169,17 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             hk1.camera_position.y *= 2;
             hk1.camera_position.z *= 2;
             break;
-        case 'a':
+        case 'z':
             hk1.camera_position.x =  x0* cos(0.1) +  y0* sin(0.1);
             hk1.camera_position.y = -x0 * sin(0.1) + y0 * cos(0.1);
+            break;
+        case 'x':
+            hk1.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
+            hk1.camera_position.z = -y0 * sin(0.1) + z0 * cos(0.1);
+            break;
+        case 'y':
+            hk1.camera_position.x =  x0* cos(0.1) +  z0* sin(0.1);
+            hk1.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'e':
             hk1.camera_position.z --;
