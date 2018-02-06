@@ -1,6 +1,6 @@
 #### Zheng Xiangyue G42416206 - Assignment 1
 
-![Feb-02-2018 16-01-26](<https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/master/result/Feb-02-2018%2016-01-26.gif>)
+![Feb-02-2018 16-01-26](<https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/master/result/Knight.gif>)
 
 #### Project description :
 
