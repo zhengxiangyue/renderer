@@ -82,7 +82,8 @@ void homework1::set_camera_position(const char* file_name) {
 void homework1::denote_back_face() {
     back_face_indexs.clear();
     for(int i = 0 ; i < object.faces.size() ; ++i) {
-        if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
+        // Some the polygons are denoted in anti-clockwise order
+        if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) >= 0)
             back_face_indexs.insert(i);
     }
 }

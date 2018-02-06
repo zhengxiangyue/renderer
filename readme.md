@@ -4,9 +4,9 @@
 
 #### Project description :
 
-The code reads a 3d model file and show the object on the screen using perspective transformation.
+The code reads a 3d model file and shows the object on the screen using perspective transformation.
 
-#### The main work includes : 
+#### The main work includes :
 
 ###### 3D point and its operation
 
@@ -14,8 +14,8 @@ The code reads a 3d model file and show the object on the screen using perspecti
 
 ###### 3D vector and its operation
 
--  cross pruduction
--  dot product
+-  cross production
+-  the dot product
 -  subtraction
 -  addition
 -  division
@@ -23,9 +23,9 @@ The code reads a 3d model file and show the object on the screen using perspecti
 
 ###### Matrix and its operation
 
--  dot pruduction
--  cross pruduction
--  transposion
+-  dot production
+-  cross production
+-  transposition
 
 #### Result :
 
@@ -39,14 +39,13 @@ The code reads a 3d model file and show the object on the screen using perspecti
 
 \- The normal is not perfectly compatible when there are concave polygons.
 
-Some images : https://github.com/Zhengxiangyue/graphicsAssignments/tree/master/result
+Some images: <https://github.com/Zhengxiangyue/graphicsAssignments/tree/master/result>
 
-#### Input : 
+#### Input :
 
 1. The object file, locate at "assets/D/"
-2. The camera imformation, locate at "assets/camera_position"
+2. The camera information, locate at "assets/camera_position"
 
 #### Build instruction :
 
-Use Cmake to build
-
+Use CMake to build
