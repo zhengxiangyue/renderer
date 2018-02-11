@@ -111,10 +111,16 @@ void render_scene() {
     matrix<double> Mview(R.dot(T));
 
     // simply igone front cliping plane and back clipping plane, and set focus plane d to be 1
+
+    double d = 1.0, h = 1.0, f = std::numeric_limits<double>::max();
+
+    // [d,f] maps to [0,1]
+
+
     matrix<double> Mpers(
-            {{1,0,0,0},
-             {0,1,0,0},
-             {0,0,1,0},
+            {{d/h,0,0,0},
+             {0,d/h,0,0},
+             {0,0,f/(f-d),-d*f/(f-d)},
              {0,0,1,0}
             });
 
