@@ -43,6 +43,12 @@ public:
     vector3d N, U, V;
 
     /**
+     * screen pixel points transformed from the object using perspective transform, with z depth
+     * x,y maps to -1 ~ 1, z maps to 0 ~ 1
+     * */
+    vector<point3d> screen_points;
+
+    /**
      * Back face indexs are stored and the faces are not shown when drawing
      */
     unordered_set<int> back_face_indexs;
@@ -50,7 +56,7 @@ public:
     /**
      * Read from a ".d" file which contain the information of the object
      */
-    bool set_object_position(const char*);
+    bool set_object_position(const char*, const vector<int>);
 
     /**
      * Read from a ".txt" file which contain 9 numbers to denote the pattern of the camera
@@ -61,6 +67,11 @@ public:
      * Calculate the back faces base on the current scene
      */
     void denote_back_face();
+
+    /**
+     * Perspective transform, after the transform, x is [-1,1], y is [-1,1], z is [0,1]
+     */
+    void object_points_to_screen_points();
 };
 
 

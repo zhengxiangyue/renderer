@@ -1,21 +1,14 @@
 #include "homework1.h"
+#include "homework2.h"
 using namespace std;
 
 /**
  * In the homework1, we have an object and a camera
  * we are to use the perspective transorm to convert all 3d points onto a plane
  */
-homework1 hk1;
+//homework1 hk1;
 
-/**
- * The 2d result will store all the 2d final points
- */
-vector<pair<double,double>> points_2d;
-
-/**
- * Main work is done here
- */
-void render_scene();
+homework2 hk;
 
 /*******  OpenGL GDI helper, to draw lines on a 2d window  *******/
 
@@ -64,14 +57,18 @@ int main( int argn, char** arguments) {
     }
 
     // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
-    if(!hk1.set_object_position(arguments[1]))
-        return 11;
+    hk.set_object_position(arguments[1],{0,0,0});
+
+    hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
 
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
-    hk1.set_camera_position("assets/camera_position.txt");
+    hk.set_camera_position("assets/camera_position.txt");
 
     // Main work is done here
-    render_scene();
+    hk.object_points_to_screen_points();
+
+    // show the screen points;
+    hk.scan_conversion();
 
     // Render work has done, since I have no power to write a GDI, let opengl help me
     glut_helper(argn, arguments);
@@ -79,86 +76,38 @@ int main( int argn, char** arguments) {
     return 0;
 }
 
-void render_scene() {
-
-    // Calculate N vector
-    hk1.N = (hk1.viewing_point - hk1.camera_position) / (hk1.viewing_point - hk1.camera_position).mold();
-
-    // Calculate U vector
-    hk1.U = (hk1.N * hk1.camera_up_direction) / (hk1.N * hk1.camera_up_direction).mold();
-
-    // Calculate V vector
-    hk1.V =  hk1.U * hk1.N;
-
-    // Find back face
-    hk1.denote_back_face();
-
-    // convert world coordinates into the camera coordinates, using R and T matrix
-    matrix<double> R(
-            {{hk1.U.x, hk1.U.y, hk1.U.z, 0},
-             {hk1.V.x, hk1.V.y, hk1.V.z, 0},
-             {hk1.N.x, hk1.N.y, hk1.N.z, 0},
-             {0, 0, 0, 1},
-            });
-
-    matrix<double> T(
-            {{1, 0, 0, -hk1.camera_position.x},
-             {0, 1, 0, -hk1.camera_position.y},
-             {0, 0, 1, -hk1.camera_position.z},
-             {0, 0, 0, 1}
-            });
-
-    matrix<double> Mview(R.dot(T));
-
-    // simply igone front cliping plane and back clipping plane, and set focus plane d to be 1
-
-    double d = 1.0, h = 1.0, f = std::numeric_limits<double>::max();
-
-    // [d,f] maps to [0,1]
-
-
-    matrix<double> Mpers(
-            {{d/h,0,0,0},
-             {0,d/h,0,0},
-             {0,0,f/(f-d),-d*f/(f-d)},
-             {0,0,1,0}
-            });
-
-    points_2d = {};
-    // Perspective transfomation for each point
-    for(auto each:hk1.object.points){
-        matrix<double> each_point_matrix(each.to_matrix());
-        each_point_matrix.push_back({1});
-        each_point_matrix = Mpers * Mview * each_point_matrix;
-        // xs = X / W, ys = Y / W, zs = Z / W, while we only concern xs and ys
-        points_2d.push_back({each_point_matrix[0][0]/each_point_matrix[3][0], each_point_matrix[1][0]/each_point_matrix[3][0]});
-    }
-}
-
 void prevent_resize(int width, int height)  {
     glutReshapeWindow( width, height);
 }
 
 void glut_display()  {
+//    /** display for homework 1
+//    glClearColor(0.0, 0.0, 0.0, 0.0);
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    glColor3f(1.0, 0.5, 0.5);
+//
+//    for(int i = 0 ; i < hk.object.faces.size() ; ++i) {
+//        if(hk.back_face_indexs.find(i) != hk.back_face_indexs.end()) continue;
+//        glBegin(GL_LINE_LOOP); // GL_LINE_LOOP  GL_POINTS
+//        for(auto &each_point:hk.object.faces[i]) {
+//            glVertex2f(hk.screen_points[each_point].x, hk.screen_points[each_point].y);
+//        }
+//        glEnd();
+//    }
+//    glFlush();
+//    */
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    /* display for homework 2, draw the  */
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor3f(1.0, 0.5, 0.5);
-
-    for(int i = 0 ; i < hk1.object.faces.size() ; ++i) {
-        if(hk1.back_face_indexs.find(i) != hk1.back_face_indexs.end()) continue;
-        glBegin(GL_LINE_LOOP);
-        for(auto &each_point:hk1.object.faces[i]) {
-            glVertex2f(points_2d[each_point].first, points_2d[each_point].second);
-        }
-        glEnd();
-    }
+    glDrawPixels(hk.window_y,hk.window_y, GL_RGB,
+                 GL_UNSIGNED_BYTE, hk.pixel_buffer);
     glFlush();
 }
 
 void keyboardFunc(unsigned char key, int x, int y ) {
-    double x0 = hk1.camera_position.x, y0 = hk1.camera_position.y, z0 = hk1.camera_position.z;
+    double x0 = hk.camera_position.x, y0 = hk.camera_position.y, z0 = hk.camera_position.z;
 
     switch ( key )
     {
@@ -166,49 +115,50 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             exit(0);
             break;
         case 'w':
-            hk1.camera_position.x /= 2;
-            hk1.camera_position.y /= 2;
-            hk1.camera_position.z /= 2;
+            hk.camera_position.x /= 2;
+            hk.camera_position.y /= 2;
+            hk.camera_position.z /= 2;
             break;
         case 's':
-            hk1.camera_position.x *= 2;
-            hk1.camera_position.y *= 2;
-            hk1.camera_position.z *= 2;
+            hk.camera_position.x *= 2;
+            hk.camera_position.y *= 2;
+            hk.camera_position.z *= 2;
             break;
         case 'z':
-            hk1.camera_position.x =  x0* cos(0.1) +  y0* sin(0.1);
-            hk1.camera_position.y = -x0 * sin(0.1) + y0 * cos(0.1);
+            hk.camera_position.x =  x0* cos(0.1) +  y0* sin(0.1);
+            hk.camera_position.y = -x0 * sin(0.1) + y0 * cos(0.1);
             break;
         case 'x':
-            hk1.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
-            hk1.camera_position.z = -y0 * sin(0.1) + z0 * cos(0.1);
+            hk.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
+            hk.camera_position.z = -y0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'y':
-            hk1.camera_position.x =  x0* cos(0.1) +  z0* sin(0.1);
-            hk1.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
+            hk.camera_position.x =  x0* cos(0.1) +  z0* sin(0.1);
+            hk.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'e':
-            hk1.camera_position.z --;
+            hk.camera_position.z --;
             break;
         case 'r':
-            hk1.camera_position.z ++;
+            hk.camera_position.z ++;
             break;
         case 'v':
-            hk1.camera_position.y ++;
+            hk.camera_position.y ++;
             break;
         case 'b':
-            hk1.camera_position.y --;
+            hk.camera_position.y --;
             break;
         case 'd':
-            hk1.camera_position.x ++;
+            hk.camera_position.x ++;
             break;
         case 'f':
-            hk1.camera_position.x --;
+            hk.camera_position.x --;
             break;
 
     }
 
-    render_scene();
+    hk.object_points_to_screen_points();
+    hk.scan_conversion();
     glutPostRedisplay();
 }
 
@@ -220,7 +170,7 @@ void glut_helper(int argn, char **arguments)  {
 
     glutInitWindowPosition(100, 100);
 
-    glutInitWindowSize(1000, 1000);
+    glutInitWindowSize(100, 100);
 
     glutCreateWindow("Graphics II - Assignment 1");
 

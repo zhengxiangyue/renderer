@@ -10,9 +10,9 @@ using namespace std;
  * @param file_name
  * @return bool
  */
-bool homework1::set_object_position(const char* file_name) {
+bool homework1::set_object_position(const char* file_name, const vector<int> position ) {
 
-    int points_number, faces_number, temp_point_index, face_points_number;
+    int points_number, faces_number, temp_point_index, face_points_number, current_point_number = object.points.size();
     char buffer[128];
     ifstream data_stream;
     string each_line;
@@ -39,6 +39,11 @@ bool homework1::set_object_position(const char* file_name) {
         getline(data_stream, each_line);
         istringstream each_line_in(each_line);
         each_line_in >> new_point.x >> new_point.y >> new_point.z;
+
+        new_point.x += position[0];
+        new_point.y += position[1];
+        new_point.z += position[2];
+
         object.points.push_back(new_point);
     }
 
@@ -50,7 +55,7 @@ bool homework1::set_object_position(const char* file_name) {
         each_line_in >> face_points_number;
         for(int j = 0 ; j < face_points_number ; ++j) {
             each_line_in >> temp_point_index;
-            face.push_back(temp_point_index-1);
+            face.push_back(temp_point_index-1+current_point_number);
         }
         object.faces.push_back(face);
     }
@@ -88,5 +93,62 @@ void homework1::denote_back_face() {
     }
 }
 
+void homework1::object_points_to_screen_points() {
+    // Calculate N vector
+    N = (viewing_point - camera_position) / (viewing_point - camera_position).mold();
+
+    // Calculate U vector
+    U = (N * camera_up_direction) / (N * camera_up_direction).mold();
+
+    // Calculate V vector
+    V =  U * N;
+
+    // Find back face
+    denote_back_face();
+
+    // convert world coordinates into the camera coordinates, using R and T matrix
+    matrix<double> R(
+            {{U.x, U.y, U.z, 0},
+             {V.x, V.y, V.z, 0},
+             {N.x, N.y, N.z, 0},
+             {0, 0, 0, 1},
+            });
+
+    matrix<double> T(
+            {{1, 0, 0, -camera_position.x},
+             {0, 1, 0, -camera_position.y},
+             {0, 0, 1, -camera_position.z},
+             {0, 0, 0, 1}
+            });
+
+    matrix<double> Mview(R.dot(T));
+
+    // simply igone front cliping plane and back clipping plane, and set focus plane d to be 1
+
+    double d = 1.0, h = 1.0, f = 1000;
+
+    // [d,f] maps to [0,1]
+    matrix<double> Mpers(
+            {{d/h,0,0,0},
+             {0,d/h,0,0},
+             {0,0,f/(f-d),-d*f/(f-d)},
+             {0,0,1,0}
+            });
+
+
+    screen_points.clear();
+    // Perspective transfomation for each point
+    for(auto each:object.points){
+        matrix<double> each_point_matrix(each.to_matrix());
+        each_point_matrix.push_back({1});
+        each_point_matrix = Mpers * Mview * each_point_matrix;
+        point3d transformed_point(
+                each_point_matrix[0][0]/each_point_matrix[3][0],
+                each_point_matrix[1][0]/each_point_matrix[3][0],
+                each_point_matrix[2][0]/each_point_matrix[3][0]
+        );
+        screen_points.push_back(transformed_point);
+    }
+}
 
 

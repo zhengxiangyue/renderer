@@ -96,6 +96,24 @@ struct point3d{
 };
 
 /**
+ * edge table element
+ */
+struct edge_table_element{
+    int y_start;          // same as the element index in the edge table
+    int y_max;          // upper point y
+    double x_start;       // corespond to x_min
+    double delta;       // delta x / delta y
+
+    double z_upper;
+    double z_lower;
+
+    edge_table_element(int y_start, int y_max, double x_start, double delta, double z_upper, double z_lower) : y_start(y_start),
+                                                                           y_max(y_max),
+                                                                           x_start(x_start),
+                                                                           delta(delta), z_upper(z_upper),z_lower(z_lower){}
+};
+
+/**
  * stream operator << overlodaded for vector3d
  * @param co
  * @param vec
