@@ -6,8 +6,12 @@ using namespace std;
  * In the homework1, we have an object and a camera
  * we are to use the perspective transorm to convert all 3d points onto a plane
  */
-//homework1 hk1;
+//homework1 hk;
 
+/**
+ * In the homework2, implement z-buffer and scan-conversion algorithm to color the faces
+ * and un-display the covered front faces
+ */
 homework2 hk;
 
 /*******  OpenGL GDI helper, to draw lines on a 2d window  *******/
@@ -51,15 +55,14 @@ void glut_helper(int argn, char** arguments);
  */
 int main( int argn, char** arguments) {
 
-    if(argn <= 1) {
-        cout << "Argument file name missing: ./graphic [object file.d]";
-        return 2;
-    }
-
     // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
-    hk.set_object_position(arguments[1],{0,0,0});
+    hk.set_object_position("assets/D/cone.d.txt",{0,0,0});
 
     hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
+
+    /* add other object you want */
+
+    // ...
 
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
     hk.set_camera_position("assets/camera_position.txt");
@@ -81,7 +84,12 @@ void prevent_resize(int width, int height)  {
 }
 
 void glut_display()  {
-//    /** display for homework 1
+
+
+    /**
+     * * display for homework 1
+     * */
+
 //    glClearColor(0.0, 0.0, 0.0, 0.0);
 //    glClear(GL_COLOR_BUFFER_BIT);
 //
@@ -98,11 +106,12 @@ void glut_display()  {
 //    glFlush();
 //    */
 
-    /* display for homework 2, draw the  */
+    /*
+     * display for homework 2, draw the pixels directly
+     * */
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glDrawPixels(hk.window_y,hk.window_y, GL_RGB,
-                 GL_UNSIGNED_BYTE, hk.pixel_buffer);
+    glDrawPixels(hk.window_y,hk.window_y, GL_RGB, GL_UNSIGNED_BYTE, hk.pixel_buffer);
     glFlush();
 }
 
@@ -157,8 +166,11 @@ void keyboardFunc(unsigned char key, int x, int y ) {
 
     }
 
+    /* Re-render the scene */
     hk.object_points_to_screen_points();
     hk.scan_conversion();
+
+    /* Refresh displaying window*/
     glutPostRedisplay();
 }
 
@@ -172,7 +184,7 @@ void glut_helper(int argn, char **arguments)  {
 
     glutInitWindowSize(100, 100);
 
-    glutCreateWindow("Graphics II - Assignment 1");
+    glutCreateWindow("Graphics II - Assignment 1,2");
 
     glutReshapeFunc(prevent_resize);
 

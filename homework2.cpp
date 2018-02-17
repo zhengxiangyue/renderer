@@ -33,8 +33,10 @@ homework2::homework2() {
 
 void homework2::scan_conversion() {
     /* each loop handel one face*/
-    // todo: add z-buffer
     srand(time(NULL));
+
+
+    /* May render several times, initialize the buffers */
 
     z_buffer = vector<vector<double>>(window_x, vector<double>(window_y,1));
 
@@ -46,6 +48,7 @@ void homework2::scan_conversion() {
         }
     }
 
+    /* Scan conversion for each face */
     for(int i = 0 ; i < object.faces.size() ; ++i) {
 
         // only give color when first time render
@@ -56,7 +59,7 @@ void homework2::scan_conversion() {
             face_color_b_buffer.push_back(color_b);
         }
 
-
+        // Do not consider back face, make sure
         if(back_face_indexs.find(i) != back_face_indexs.end())
             continue;
 
