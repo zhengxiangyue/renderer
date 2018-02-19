@@ -1,4 +1,6 @@
-#### Zheng Xiangyue G42416206 - Assignment 1
+#### Zheng Xiangyue G42416206
+
+#### Assignment 1 - Perspective transform
 
 ![Feb-02-2018 16-01-26](<https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/master/result/Knight.gif>)
 
@@ -49,3 +51,11 @@ Some images: <https://github.com/Zhengxiangyue/graphicsAssignments/tree/master/r
 #### Build instruction :
 
 Use CMake to build
+
+
+
+#### Assignment2 - Scan conversion + Z buffer
+
+![bench](https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/master/result/BenchAndCone.gif)
+
+In assignment2, the scan line algorithm and z-buffer algorithm are implemented.
