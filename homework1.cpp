@@ -129,10 +129,10 @@ void homework1::object_points_to_screen_points() {
 
     // [d,f] maps to [0,1]
     matrix<double> Mpers(
-            {{d/h,0,0,0},
-             {0,d/h,0,0},
-             {0,0,f/(f-d),-d*f/(f-d)},
-             {0,0,1,0}
+            {{d/h,     0,       0,       0},
+             {0,       d/h,     0,       0},
+             {0,       0,       f/(f-d), -d*f/(f-d)},
+             {0,       0,       1,       0}
             });
 
 

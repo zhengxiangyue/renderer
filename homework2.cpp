@@ -144,9 +144,11 @@ void homework2::scan_conversion() {
 
                     z_buffer[l][ei] = zp;
 
-                    pixel_buffer[l][ei][0] = face_color_r_buffer[i];
-                    pixel_buffer[l][ei][1] = face_color_g_buffer[i];
-                    pixel_buffer[l][ei][2] = face_color_b_buffer[i];
+                    // exchange ei and l so that the coordinates match
+
+                    pixel_buffer[ei][l][0] = face_color_r_buffer[i];
+                    pixel_buffer[ei][l][1] = face_color_g_buffer[i];
+                    pixel_buffer[ei][l][2] = face_color_b_buffer[i];
 
 
                 }

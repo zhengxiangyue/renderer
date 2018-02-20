@@ -58,7 +58,7 @@ int main( int argn, char** arguments) {
     // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
     hk.set_object_position("assets/D/cone.d.txt",{0,0,0});
 
-    hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
+//    hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
 
     /* add other object you want */
 
@@ -85,7 +85,6 @@ void prevent_resize(int width, int height)  {
 
 void glut_display()  {
 
-
     /**
      * * display for homework 1
      * */
@@ -104,7 +103,6 @@ void glut_display()  {
 //        glEnd();
 //    }
 //    glFlush();
-//    */
 
     /*
      * display for homework 2, draw the pixels directly
@@ -146,23 +144,24 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             hk.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'e':
-            hk.camera_position.z --;
-            break;
-        case 'r':
-            hk.camera_position.z ++;
-            break;
-        case 'v':
-            hk.camera_position.y ++;
-            break;
-        case 'b':
-            hk.camera_position.y --;
-            break;
-        case 'd':
-            hk.camera_position.x ++;
-            break;
-        case 'f':
             hk.camera_position.x --;
             break;
+        case 'r':
+            hk.camera_position.x ++;
+            break;
+        case 'd':
+            hk.camera_position.y --;
+            break;
+        case 'f':
+            hk.camera_position.y ++;
+            break;
+        case 'c':
+            hk.camera_position.z --;
+            break;
+        case 'v':
+            hk.camera_position.z ++;
+            break;
+
 
     }
 
@@ -182,7 +181,7 @@ void glut_helper(int argn, char **arguments)  {
 
     glutInitWindowPosition(100, 100);
 
-    glutInitWindowSize(100, 100);
+    glutInitWindowSize(1000, 1000);
 
     glutCreateWindow("Graphics II - Assignment 1,2");
 
