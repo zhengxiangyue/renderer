@@ -59,3 +59,7 @@ Use CMake to build
 ![bench](https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/master/result/BenchAndCone.gif)
 
 In assignment2, the scan line algorithm and z-buffer algorithm are implemented.
+
+The implementation of simple illumination model:
+
+![knight2.gif](https://github.com/Zhengxiangyue/graphicsAssignments/blob/master/result/Knight2.gif?raw=true)
