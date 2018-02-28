@@ -5,6 +5,8 @@
 #include "homework1.h"
 using namespace std;
 
+#define CLOCK_WISE_FACE false
+
 /**
  * read data from .d file, only compatable for .d file
  * @param file_name
@@ -89,11 +91,8 @@ void homework1::denote_back_face() {
     for(int i = 0 ; i < object.faces.size() ; ++i) {
         // Some the polygons are denoted in anti-clockwise order
 
-#ifdef CLOCK_WISE_FACE
-        if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) >= 0)
-#else
-        if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
-#endif
+        if(CLOCK_WISE_FACE && object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) >= 0
+    || !CLOCK_WISE_FACE && object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
             back_face_indexs.insert(i);
     }
 }
