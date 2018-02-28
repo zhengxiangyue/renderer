@@ -198,11 +198,4 @@ void glut_helper(int argn, char **arguments)  {
     glutMainLoop();
 
 }
-#include <unordered_map>
-void trysomething() {
-
-    hash<int>
-    unordered_map<pair<int,int>,int> a;
-
-}
 
