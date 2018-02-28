@@ -88,7 +88,12 @@ void homework1::denote_back_face() {
     back_face_indexs.clear();
     for(int i = 0 ; i < object.faces.size() ; ++i) {
         // Some the polygons are denoted in anti-clockwise order
+
+#ifdef CLOCK_WISE_FACE
         if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) >= 0)
+#else
+        if(object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
+#endif
             back_face_indexs.insert(i);
     }
 }

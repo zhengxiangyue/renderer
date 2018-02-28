@@ -8,9 +8,14 @@ INCLUDE_DIRECTORIES(lib)
 
 add_library(homework1 homework1)
 add_library(homework2 homework2)
+add_library(homework3 homework3)
+
+# the only executable file is main.cpp
 add_executable(graphic main)
 
 target_link_libraries(homework1 myGraphics)
 target_link_libraries(homework2 myGraphics)
+target_link_libraries(homework3 myGraphics)
 target_link_libraries(graphic homework1)
 target_link_libraries(graphic homework2)
+target_link_libraries(graphic homework3)

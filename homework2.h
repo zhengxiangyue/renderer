@@ -32,6 +32,16 @@ public:
     uint8_t pixel_buffer[768][768][3];
 
     /**
+     * Single light source
+     */
+    vector<point3d> lights;
+
+    /**
+     * Set single light source position
+     */
+    void set_single_light_position(point3d);
+
+    /**
      * z buffer
      */
     vector<vector<double>> z_buffer;
@@ -62,7 +72,7 @@ public:
     /**
      * for each polygon, create its edge_table
      */
-    void scan_conversion();
+    void scan_conversion(bool single_light_on = false);
 };
 
 

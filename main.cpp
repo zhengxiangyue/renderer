@@ -56,7 +56,7 @@ void glut_helper(int argn, char** arguments);
 int main( int argn, char** arguments) {
 
     // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
-    hk.set_object_position("assets/D/cone.d.txt",{0,0,0});
+    hk.set_object_position("assets/D/knight.d.txt",{0,0,0});
 
 //    hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
 
@@ -67,11 +67,15 @@ int main( int argn, char** arguments) {
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
     hk.set_camera_position("assets/camera_position.txt");
 
+    hk.set_single_light_position({1,1,1});
+
+//    hk.set_single_light_position({-1,-1,-1});
+
     // Main work is done here
     hk.object_points_to_screen_points();
 
     // show the screen points;
-    hk.scan_conversion();
+    hk.scan_conversion(true);
 
     // Render work has done, since I have no power to write a GDI, let opengl help me
     glut_helper(argn, arguments);
@@ -192,6 +196,13 @@ void glut_helper(int argn, char **arguments)  {
     glutDisplayFunc(&glut_display);
 
     glutMainLoop();
+
+}
+#include <unordered_map>
+void trysomething() {
+
+    hash<int>
+    unordered_map<pair<int,int>,int> a;
 
 }
 

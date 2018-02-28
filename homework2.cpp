@@ -31,7 +31,7 @@ homework2::homework2() {
 }
 
 
-void homework2::scan_conversion() {
+void homework2::scan_conversion(bool single_light_on) {
     /* each loop handel one face*/
     srand(time(NULL));
 
@@ -53,10 +53,29 @@ void homework2::scan_conversion() {
 
         // only give color when first time render
         if(face_color_r_buffer.size() == i){
-            uint8_t color_r = rand() % 255, color_g = rand() % 255, color_b = rand() % 255;
-            face_color_r_buffer.push_back(color_r);
-            face_color_g_buffer.push_back(color_g);
-            face_color_b_buffer.push_back(color_b);
+
+            if(single_light_on) {
+
+                uint8_t gray = 0;
+
+                vector3d normal = object.normal(object.faces[i]);
+
+                for(auto each:lights) {
+                    vector3d light_vector = each - point3d(0,0,0);
+                    gray += (128 + 128 * (normal / normal.mold()).dot(light_vector / light_vector.mold()));
+                }
+
+                face_color_r_buffer.push_back(gray);
+                face_color_g_buffer.push_back(gray);
+                face_color_b_buffer.push_back(gray);
+            }else {
+                uint8_t color_r = rand() % 255, color_g = rand() % 255, color_b = rand() % 255;
+                face_color_r_buffer.push_back(color_r);
+                face_color_g_buffer.push_back(color_g);
+                face_color_b_buffer.push_back(color_b);
+            }
+
+
         }
 
         // Do not consider back face, make sure
@@ -182,6 +201,12 @@ inline int homework2::to_pixel(double &value, bool shortten) {
 
 inline double homework2::to_double_pixel(double &value) {
     return (value+1)*window_y/2.0;
+}
+
+void homework2::set_single_light_position(const point3d input_light) {
+
+    lights.push_back(input_light);
+
 }
 
 
