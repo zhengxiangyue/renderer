@@ -29,7 +29,7 @@ public:
     /**
      * refresh buffer R G B
      */
-    uint8_t pixel_buffer[768][768][3];
+    uint8_t pixel_buffer[WINDOW_X][WINDOW_Y][3];
 
     /**
      * Single light source

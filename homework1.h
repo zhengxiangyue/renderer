@@ -7,11 +7,20 @@
 
 #include "lib/myGraphics.h"
 #include "lib/matrix.h"
+#include "lib/illumination.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <unordered_set>
+
+#define WINDOW_X 1000
+#define WINDOW_Y 1000
+
+#define DEBUG_MODE false
+
+#define CLOCK_WISE_FACE true
+
 
 using namespace std;
 
@@ -33,7 +42,7 @@ public:
     vector3d camera_up_direction;
 
     /**
-     * The object
+     * The object， actually, all polygons of all object are stored here
      */
     polygonal_object object;
 

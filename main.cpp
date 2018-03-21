@@ -56,20 +56,28 @@ void glut_helper(int argn, char** arguments);
 int main( int argn, char** arguments) {
 
     // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
-    hk.set_object_position("assets/D/knight.d.txt",{0,0,0});
+//    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
+//    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
 
-//    hk.set_object_position("assets/D/bench.d.txt",{0,1,2});
+    hk.set_object_position("assets/D/cow.d.txt",{0,1,2});
 
     /* add other object you want */
 
     // ...
 
+//    if(!hk.set_object_position("assets/D/knight.d.txt",{4,4,4})) return 12;
+
+    // After set all object, compute normal. Kind of wired to compte here... ...
+    hk.object.compute_secene_point_normal();
+
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
     hk.set_camera_position("assets/camera_position.txt");
 
-    hk.set_single_light_position({1,1,1});
+    /* Set simple light here */
 
-//    hk.set_single_light_position({-1,-1,-1});
+    hk.set_single_light_position({100,100,100});
+    hk.set_single_light_position({100,100,-100});
+    hk.set_single_light_position({-100,-100,100});
 
     // Main work is done here
     hk.object_points_to_screen_points();

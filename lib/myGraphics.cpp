@@ -77,8 +77,8 @@ vector3d vector3d::operator-(const vector3d end_vector) {
 vector3d vector3d::operator+(const vector3d end_vector) {
     vector3d new_vector;
     new_vector.x = x + end_vector.x;
-    new_vector.y = x + end_vector.y;
-    new_vector.z = x + end_vector.z;
+    new_vector.y = y + end_vector.y;
+    new_vector.z = z + end_vector.z;
     return new_vector;
 }
 
@@ -103,6 +103,14 @@ double vector3d::mold() {
     return sqrt(x*x + y*y + z*z);
 }
 
+vector3d vector3d::operator*(double co) {
+    vector3d new_vector;
+    new_vector.x = x * co;
+    new_vector.y = y * co;
+    new_vector.z = z * co;
+    return new_vector;
+}
+
 /**
  * the vector will be shown as (x,y,z)
  * @param co
@@ -120,11 +128,42 @@ ostream &operator <<(ostream &co, const point3d &point) {
 }
 
 
-vector3d polygonal_object::normal(vector<int> &face) {
+vector3d polygonal_object::normal(vector<int> &face, int &face_index) {
 
     point3d first_point = points[face[0]], second_point = points[face[1]], third_point = points[face[2]];
 
     vector3d first_vector = second_point - first_point, second_vector = third_point - second_point;
 
-    return first_vector * second_vector;
+    vector3d nor = first_vector * second_vector;
+
+//    if(nor.mold() == 0) {
+//        cout << "normal div 0" << endl;
+//        cout << "Index:" << face_index << endl;
+//        cout << first_point << second_point << third_point << endl;
+//    }
+//    cout << endl;
+
+    return nor / nor.mold();
+}
+
+/**
+ * According to face_nomral, compute all point normal
+ */
+void polygonal_object::compute_secene_point_normal() {
+    for(int i = 0 ; i < face_normal.size() ; ++i) {
+//        cout << face_normal[i] << endl;
+//        cout << "face" << i << " have points:";
+        for(int j = 0 ; j < faces[i].size() ; ++j) {
+//                cout << faces[i][j] << ",";
+            point_normal[faces[i][j]] = face_normal[i] + point_normal[faces[i][j]];
+
+        }
+    }
+//    cout << "Points normal:" << endl;
+    for(int i = 0 ; i < points.size() ; ++i) {
+//        cout << sta[i] << endl;
+        if(point_normal[i].mold()) point_normal[i] = point_normal[i] / point_normal[i].mold();
+//        cout << point_normal[i] << endl;
+    }
+//    cout << "Points normal end" << endl;
 }

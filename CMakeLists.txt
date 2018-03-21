@@ -16,6 +16,12 @@ add_executable(graphic main)
 target_link_libraries(homework1 myGraphics)
 target_link_libraries(homework2 myGraphics)
 target_link_libraries(homework3 myGraphics)
+
+target_link_libraries(homework1 illumination)
+target_link_libraries(homework2 illumination)
+target_link_libraries(homework3 illumination)
+
 target_link_libraries(graphic homework1)
 target_link_libraries(graphic homework2)
 target_link_libraries(graphic homework3)
+add_executable(Ztest Ztest.cpp)

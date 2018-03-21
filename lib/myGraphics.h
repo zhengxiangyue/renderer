@@ -48,6 +48,13 @@ struct vector3d{
     vector3d operator *(vector3d end_vector);
 
     /**
+     *
+     * @param co
+     * @return
+     */
+    vector3d operator *(double co);
+
+    /**
      * vector minus
      * @param vector3d end_vector
      * @return vector3d
@@ -101,16 +108,25 @@ struct point3d{
 struct edge_table_element{
     int y_start;          // same as the element index in the edge table
     int y_max;          // upper point y
-    double x_start;       // corespond to x_min
+
+    double x_start;       // corespond to y_start
     double delta;       // delta x / delta y
 
-    double z_upper;
-    double z_lower;
+    double z_start;         // for z_buffer y increment
+    double z_delta_to_y;      //
 
-    edge_table_element(int y_start, int y_max, double x_start, double delta, double z_upper, double z_lower) : y_start(y_start),
-                                                                           y_max(y_max),
-                                                                           x_start(x_start),
-                                                                           delta(delta), z_upper(z_upper),z_lower(z_lower){}
+    vector3d normal_start;
+    vector3d normal_end;
+
+    edge_table_element(int y_start, int y_max, double x_start, double delta, double z_start, double z_delta_to_y, vector3d normal_start, vector3d normal_end) :
+            y_start(y_start),
+            y_max(y_max),
+            x_start(x_start),
+            delta(delta),
+            z_start(z_start),
+            z_delta_to_y(z_delta_to_y),
+            normal_start(normal_start),
+            normal_end(normal_end){}
 };
 
 /**
@@ -148,11 +164,26 @@ struct polygonal_object{
     vector<vector<int>> faces;
 
     /**
-     * the face_index-th face's normal vector
+     * New added, when all
+     */
+    vector<vector3d> point_normal;
+
+    /**
+     * Each pholygon has a normal, accessed through
+     */
+    vector<vector3d> face_normal;
+
+    /**
+     * the face_index-th face's normal vector, for the purpose of calculating  face_normal
      * @param int face_index
      * @return vector3d
      */
-    vector3d normal(vector<int> &face);
+    vector3d normal(vector<int> &face, int& face_index);
+
+    /**
+     * Calculate each point's normal
+     */
+    void compute_secene_point_normal();
 };
 
 

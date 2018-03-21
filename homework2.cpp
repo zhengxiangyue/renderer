@@ -6,9 +6,6 @@
 
 /* homework2 */
 
-#define WINDOW_X 768
-#define WINDOW_Y 768
-
 homework2::homework2() {
     window_x = WINDOW_X;
     window_y = WINDOW_Y;
@@ -27,14 +24,17 @@ homework2::homework2() {
             pixel_buffer[i][j][2] = 0;
         }
     }
-
 }
 
-
+/**
+ * For each polygon do scan conversion
+ * Step 1: Add all newly intersect edges
+ * Step 2: Remove all leaving edges
+ * Step 3: Update all intersection information
+ */
 void homework2::scan_conversion(bool single_light_on) {
     /* each loop handel one face*/
     srand(time(NULL));
-
 
     /* May render several times, initialize the buffers */
 
@@ -58,7 +58,7 @@ void homework2::scan_conversion(bool single_light_on) {
 
                 uint8_t gray = 0;
 
-                vector3d normal = object.normal(object.faces[i]);
+                vector3d normal = object.face_normal[i];
 
                 for(auto each:lights) {
                     vector3d light_vector = each - point3d(0,0,0);
@@ -85,7 +85,6 @@ void homework2::scan_conversion(bool single_light_on) {
         auto each_face = object.faces[i];
         int point_number = each_face.size();
 
-
         /* build this face's edge table, before that, clear the edge table */
 
         for(auto& each:edge_table)
@@ -94,102 +93,119 @@ void homework2::scan_conversion(bool single_light_on) {
         for(int j = 0 ; j < point_number ; ++j) {
             // add each edge to the edge table
             // two point indexs are each_face[j], each_face[(j+1)%each_face.size()]
-            auto lower_point = screen_points[each_face[j]], upper_point = screen_points[each_face[(j+1)%point_number]];
+            int index_start = each_face[j], index_end = each_face[(j+1)%point_number];
+            auto lower_point = screen_points[index_start], upper_point = screen_points[index_end];
 
-            // if it is a horizontal edge, ignore it
+            // if out of bound, exit, TODO: not exit...
+            if(lower_point.y > 1 || lower_point.y < -1 || lower_point.x > 1 || lower_point.x < -1 ||
+                    upper_point.y > 1 || upper_point.y < -1 || upper_point.x > 1 || upper_point.x < -1)
+                exit(12);
+
+            // if it is a horizontal edge, give color directly
             if(to_pixel(lower_point.y) == to_pixel(upper_point.y))
                 continue;
 
-            if(lower_point.y >  upper_point.y)
+            if(lower_point.y > upper_point.y) {
                 swap(lower_point, upper_point);
+                swap(index_start, index_end);
+            }
 
-            // if the lower point out of screen, ignore it
-            if(lower_point.y > 1 || lower_point.y < -1)
-                continue;
+
+            // Calculate the intensity of the lower poi
 
             edge_table_element new_element(to_pixel(lower_point.y),
-                               to_pixel(upper_point.y, true),
-                               to_double_pixel(lower_point.x),
-                               (double)(lower_point.x - upper_point.x) / (double)(lower_point.y - upper_point.y),
-                                           upper_point.z,
-                                           lower_point.z
+                                           to_pixel(upper_point.y),
+                                           to_double_pixel(lower_point.x),
+                                           (double)(lower_point.x - upper_point.x) / (double)(lower_point.y - upper_point.y),
+                                           lower_point.z,
+                                           (double)(lower_point.z - upper_point.z) / (double)(to_pixel(lower_point.y) - to_pixel(upper_point.y)),
+                                           object.point_normal[index_start],
+                                           object.point_normal[index_end]
             );
 
-            if(new_element.y_start > new_element.y_max)
-                new_element.y_max = new_element.y_start;
-
-            int edge_table_size = edge_table.size();
             edge_table[to_pixel(lower_point.y)].push_back(new_element);
         }
 
         /* the edge table has been built, use scan line to decide the pixels' color */
 
+        // In the edge table, x, y are from 0 to WINDOW_SIZE
+
         // ei is the current scan line's y coordinate
         int ei = 0;
 
-        // find the first y place to start
+        // find the first y place to start todo: edge_table as data structure
         for(; ei < window_y ; ++ei) if(edge_table[ei].size()) break;
 
         // each loop scan each line
         for(; ei < window_y ; ++ei) {
-            // move edge(s) from ET bucket y whose ymin = y (entering edges)
-            // to ATE,
+            // move edge(s) from ET bucket y whose ymin = y (entering edges) to ATE,
             for(int j = 0 ; j < edge_table[ei].size() ; ++j)
                 active_edge_table.push_back(edge_table[ei][j]);
 
             edge_table[ei].clear();
 
-            // maintaining ATE sort order on x
+            // Remove the leaving edge
+            vector<edge_table_element>::iterator it = active_edge_table.begin();
+            while(it != active_edge_table.end()) {
+                if(ei == it->y_max)
+                    // Remove from AET entries for which y = ymax (leave edges)
+                    active_edge_table.erase(it);
+                else
+                    // replace x by x + increment
+                    // This places next scan-line intersection into each entry in AET
+                    it++;
+            }
+
             sort(active_edge_table.begin(), active_edge_table.end(), act_cmp());
+
 
             //  Fill in desired pixel values on scan line y by using pairs of xcoordinates from the AET
             for(double k = 0 ; k < active_edge_table.size() ; k += 2) {
-                edge_table_element span_left = active_edge_table[k], span_right = active_edge_table[k+1];
+                edge_table_element *span_left = &active_edge_table[k], *span_right = &active_edge_table[k+1];
+                double z_current = span_left->z_start, z_delta_to_x = (span_left->z_start - span_right->z_start) / (span_left->x_start - span_right->x_start);
 
-                if((int)span_left.x_start > (int)span_right.x_start)
-                    continue;
+                // According to intensity
+                vector3d la = span_left->normal_end * (double)(ei - span_left->y_start)/(double)(span_left->y_max - span_left->y_start)
+                              + span_left->normal_start * (double)(span_left->y_max - ei)/(double)(span_left->y_max - span_left->y_start),
 
-                double za = span_left.y_max == span_left.y_start ?  span_left.z_upper : span_left.z_upper - (span_left.z_upper - span_left.z_lower) * (span_left.y_max - ei) / (span_left.y_max - span_left.y_start);
-                double zb = span_right.y_max == span_right.y_start ? span_right.z_upper : span_right.z_upper - (span_right.z_upper - span_right.z_lower) * (span_right.y_max - ei) / (span_right.y_max - span_right.y_start);
+                lb = span_right->normal_end * (double)(ei - span_right->y_start)/(double)(span_right->y_max - span_right->y_start)
+                     + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
 
-                // todo: z-buffer
-                for(int l = max(0,(int)span_left.x_start)  ; l <= (int)span_right.x_start && l < WINDOW_X ; ++l) {
+                for(int l = (int)span_left->x_start  ; l <= (int)span_right->x_start ; ++l) {
+                    if(z_current < z_buffer[l][ei]){
+                        z_buffer[l][ei] = z_current;
 
-                    // calculate z value of the current point
-                    double zp = l == max(0,(int)span_left.x_start) ? za : zb - (zb - za) * (span_right.x_start - l)  / (span_right.x_start - span_left.x_start);
+                        vector3d cur_normal = span_right->x_start - span_left->x_start == 0 ? la : (la * (span_right->x_start - (double)l) / (span_right->x_start - span_left->x_start) +
+                                lb * ((double)l - span_left->x_start) / (span_right->x_start - span_left->x_start));
 
-                    if(zp > z_buffer[l][ei])
-                        continue;
+                        // Normalizing is so ******* important
+                        cur_normal = cur_normal / cur_normal.mold();
 
-                    z_buffer[l][ei] = zp;
+                        int gray = 0;
+                        for(auto each:lights) {
+                            vector3d light_vector = point3d(0,0,0) - each;
 
-                    // exchange ei and l so that the coordinates match
+                            light_vector = light_vector / light_vector.mold();
 
-                    pixel_buffer[ei][l][0] = face_color_r_buffer[i];
-                    pixel_buffer[ei][l][1] = face_color_g_buffer[i];
-                    pixel_buffer[ei][l][2] = face_color_b_buffer[i];
+                            gray += diffuse_trem(1,88,cur_normal,light_vector);
+                        }
 
+                        pixel_buffer[ei][l][0] = gray; //face_color_r_buffer[i];
+                        pixel_buffer[ei][l][1] = gray; //face_color_r_buffer[i];
+                        pixel_buffer[ei][l][2] = gray; //face_color_r_buffer[i];
 
+                    }
+
+                    z_current += z_delta_to_x;
                 }
+
+                // Update x and z
+                span_left->x_start += span_left->delta;
+                span_right->x_start += span_right->delta;
+
+                span_left->z_start += span_left->z_delta_to_y;
+                span_right->z_start += span_right->z_delta_to_y;
             }
-
-
-            vector<edge_table_element>::iterator it = active_edge_table.begin();
-
-            while(it != active_edge_table.end()) {
-                if(ei == it->y_max) {
-                    // Remove from AET entries for which y = ymax (leave edges)
-                    active_edge_table.erase(it);
-                }else {
-                    // replace x by x + increment
-                    // This places next scan-line intersection into each entry in AET
-                    it->x_start += it->delta;
-                    it++;
-                }
-            }
-
-            sort(active_edge_table.begin(), active_edge_table.end(), act_cmp());
-
         }
     }
 }
@@ -204,9 +220,7 @@ inline double homework2::to_double_pixel(double &value) {
 }
 
 void homework2::set_single_light_position(const point3d input_light) {
-
     lights.push_back(input_light);
-
 }
 
 

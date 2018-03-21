@@ -5,7 +5,6 @@
 #include "homework1.h"
 using namespace std;
 
-#define CLOCK_WISE_FACE false
 
 /**
  * read data from .d file, only compatable for .d file
@@ -47,6 +46,7 @@ bool homework1::set_object_position(const char* file_name, const vector<int> pos
         new_point.z += position[2];
 
         object.points.push_back(new_point);
+        object.point_normal.push_back({0,0,0});
     }
 
     // save all faces denoted by the point index clockwise
@@ -60,6 +60,7 @@ bool homework1::set_object_position(const char* file_name, const vector<int> pos
             face.push_back(temp_point_index-1+current_point_number);
         }
         object.faces.push_back(face);
+        object.face_normal.push_back(object.normal(face, i));
     }
 
     return true;
@@ -91,8 +92,8 @@ void homework1::denote_back_face() {
     for(int i = 0 ; i < object.faces.size() ; ++i) {
         // Some the polygons are denoted in anti-clockwise order
 
-        if(CLOCK_WISE_FACE && object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) >= 0
-    || !CLOCK_WISE_FACE && object.normal(object.faces[i]).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
+        if(CLOCK_WISE_FACE && object.normal(object.faces[i], i).dot(camera_position - object.points[object.faces[i][0]]) >= 0
+    || !CLOCK_WISE_FACE && object.normal(object.faces[i], i).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
             back_face_indexs.insert(i);
     }
 }
