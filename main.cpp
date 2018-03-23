@@ -83,7 +83,7 @@ int main( int argn, char** arguments) {
     hk.object_points_to_screen_points();
 
     // show the screen points;
-    hk.scan_conversion(true);
+    hk.scan_conversion(false);
 
     // Render work has done, since I have no power to write a GDI, let opengl help me
     glut_helper(argn, arguments);
@@ -134,14 +134,14 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             exit(0);
             break;
         case 'w':
-            hk.camera_position.x /= 2;
-            hk.camera_position.y /= 2;
-            hk.camera_position.z /= 2;
+            hk.camera_position.x /= 1.3;
+            hk.camera_position.y /= 1.3;
+            hk.camera_position.z /= 1.3;
             break;
         case 's':
-            hk.camera_position.x *= 2;
-            hk.camera_position.y *= 2;
-            hk.camera_position.z *= 2;
+            hk.camera_position.x *= 1.3;
+            hk.camera_position.y *= 1.3;
+            hk.camera_position.z *= 1.3;
             break;
         case 'z':
             hk.camera_position.x =  x0* cos(0.1) +  y0* sin(0.1);

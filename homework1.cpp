@@ -92,9 +92,15 @@ void homework1::denote_back_face() {
     for(int i = 0 ; i < object.faces.size() ; ++i) {
         // Some the polygons are denoted in anti-clockwise order
 
-        if(CLOCK_WISE_FACE && object.normal(object.faces[i], i).dot(camera_position - object.points[object.faces[i][0]]) >= 0
-    || !CLOCK_WISE_FACE && object.normal(object.faces[i], i).dot(camera_position - object.points[object.faces[i][0]]) <= 0)
+        auto view = camera_position - object.points[object.faces[i][1]];
+
+        double cos = object.face_normal[i].dot(view / view.mold());
+
+        cout << "Face " << i << ",View:" << view / view.mold() << ",Cos:" << cos << endl;
+
+        if(CLOCK_WISE_FACE && cos >= 0 || !CLOCK_WISE_FACE && cos <= 0) {
             back_face_indexs.insert(i);
+        }
     }
 }
 

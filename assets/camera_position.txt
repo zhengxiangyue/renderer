@@ -1,2 +1,2 @@
-10 10 10 0 0 0 0 0 1
+10 10 10 0 0 0 0 1 0
 # the camera is locating at (50, 50, 100), looking at (0, 0, 0), the up vector of the camera is (0, 0, 1)

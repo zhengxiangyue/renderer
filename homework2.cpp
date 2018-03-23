@@ -36,15 +36,17 @@ void homework2::scan_conversion(bool single_light_on) {
     /* each loop handel one face*/
     srand(time(NULL));
 
+    set<int> red_set;
+
     /* May render several times, initialize the buffers */
 
     z_buffer = vector<vector<double>>(window_x, vector<double>(window_y,1));
 
     for(int i = 0 ; i < WINDOW_X ; ++i) {
         for(int j = 0 ; j < WINDOW_Y ; ++j) {
-            pixel_buffer[i][j][0] = 0;
-            pixel_buffer[i][j][1] = 0;
-            pixel_buffer[i][j][2] = 0;
+            pixel_buffer[i][j][0] = 200;
+            pixel_buffer[i][j][1] = 200;
+            pixel_buffer[i][j][2] = 200;
         }
     }
 
@@ -74,13 +76,11 @@ void homework2::scan_conversion(bool single_light_on) {
                 face_color_g_buffer.push_back(color_g);
                 face_color_b_buffer.push_back(color_b);
             }
-
-
         }
 
         // Do not consider back face, make sure
-        if(back_face_indexs.find(i) != back_face_indexs.end())
-            continue;
+//        if(back_face_indexs.find(i) != back_face_indexs.end())
+//            continue;
 
         auto each_face = object.faces[i];
         int point_number = each_face.size();
@@ -102,8 +102,8 @@ void homework2::scan_conversion(bool single_light_on) {
                 exit(12);
 
             // if it is a horizontal edge, give color directly
-            if(to_pixel(lower_point.y) == to_pixel(upper_point.y))
-                continue;
+//            if(to_pixel(lower_point.y) == to_pixel(upper_point.y))
+//                continue;
 
             if(lower_point.y > upper_point.y) {
                 swap(lower_point, upper_point);
@@ -158,7 +158,6 @@ void homework2::scan_conversion(bool single_light_on) {
 
             sort(active_edge_table.begin(), active_edge_table.end(), act_cmp());
 
-
             //  Fill in desired pixel values on scan line y by using pairs of xcoordinates from the AET
             for(double k = 0 ; k < active_edge_table.size() ; k += 2) {
                 edge_table_element *span_left = &active_edge_table[k], *span_right = &active_edge_table[k+1];
@@ -172,7 +171,11 @@ void homework2::scan_conversion(bool single_light_on) {
                      + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
 
                 for(int l = (int)span_left->x_start  ; l <= (int)span_right->x_start ; ++l) {
-                    if(z_current < z_buffer[l][ei]){
+                    bool covered = false;
+                    if(z_current <= z_buffer[l][ei]){
+
+                        if(z_buffer[l][ei] != 1) covered = true;
+
                         z_buffer[l][ei] = z_current;
 
                         vector3d cur_normal = span_right->x_start - span_left->x_start == 0 ? la : (la * (span_right->x_start - (double)l) / (span_right->x_start - span_left->x_start) +
@@ -189,10 +192,27 @@ void homework2::scan_conversion(bool single_light_on) {
 
                             gray += diffuse_trem(1,88,cur_normal,light_vector);
                         }
+//                        if(gray == 0) {
+//                            cout << "(" << ei << "," << l << ")" << endl;
+//                            gray = 255;
+//                        }
+                        // gray;//
 
-                        pixel_buffer[ei][l][0] = gray; //face_color_r_buffer[i];
-                        pixel_buffer[ei][l][1] = gray; //face_color_r_buffer[i];
-                        pixel_buffer[ei][l][2] = gray; //face_color_r_buffer[i];
+                        if(back_face_indexs.find(i) != back_face_indexs.end()) {
+                            pixel_buffer[ei][l][0] = covered ? 255 : 0;
+                            pixel_buffer[ei][l][1] = covered ? 0 : 255;
+                            pixel_buffer[ei][l][2] = 0;
+                            red_set.insert(i);
+                        }else {
+//                            cout << gray << endl;
+                            pixel_buffer[ei][l][0] = gray;//face_color_r_buffer[i];
+                            pixel_buffer[ei][l][1] = gray;//face_color_r_buffer[i];
+                            pixel_buffer[ei][l][2] = gray;//face_color_r_buffer[i];
+                        }
+
+//                        pixel_buffer[ei][l][0] = 255;
+//                        pixel_buffer[ei][l][1] = 255;
+//                        pixel_buffer[ei][l][2] = 255;
 
                     }
 
@@ -208,6 +228,8 @@ void homework2::scan_conversion(bool single_light_on) {
             }
         }
     }
+
+    cout << "Size:" << back_face_indexs.size() << "," << red_set.size() << endl;
 }
 
 inline int homework2::to_pixel(double &value, bool shortten) {

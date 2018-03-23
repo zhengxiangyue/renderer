@@ -62,11 +62,10 @@ double vector3d::dot(vector3d end_vector) {
  * @return
  */
 vector3d vector3d::operator-(const vector3d end_vector) {
-    vector3d new_vector;
-    new_vector.x = x - end_vector.x;
-    new_vector.y = x - end_vector.y;
-    new_vector.z = x - end_vector.z;
-    return new_vector;
+    x = x - end_vector.x;
+    y = x - end_vector.y;
+    z = x - end_vector.z;
+    return *this;
 }
 
 /**
@@ -136,12 +135,7 @@ vector3d polygonal_object::normal(vector<int> &face, int &face_index) {
 
     vector3d nor = first_vector * second_vector;
 
-//    if(nor.mold() == 0) {
-//        cout << "normal div 0" << endl;
-//        cout << "Index:" << face_index << endl;
-//        cout << first_point << second_point << third_point << endl;
-//    }
-//    cout << endl;
+//    cout << nor / nor.mold() << endl;
 
     return nor / nor.mold();
 }
