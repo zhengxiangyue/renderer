@@ -135,9 +135,12 @@ vector3d polygonal_object::normal(vector<int> &face, int &face_index) {
 
     vector3d nor = first_vector * second_vector;
 
-//    cout << nor / nor.mold() << endl;
+    // things happen
+    auto nor_mold = nor.mold();
 
-    return nor / nor.mold();
+    auto result = nor_mold ? nor / nor.mold() : vector3d({0,0,1});
+
+    return result;
 }
 
 /**
@@ -150,14 +153,12 @@ void polygonal_object::compute_secene_point_normal() {
         for(int j = 0 ; j < faces[i].size() ; ++j) {
 //                cout << faces[i][j] << ",";
             point_normal[faces[i][j]] = face_normal[i] + point_normal[faces[i][j]];
-
         }
     }
 //    cout << "Points normal:" << endl;
     for(int i = 0 ; i < points.size() ; ++i) {
 //        cout << sta[i] << endl;
         if(point_normal[i].mold()) point_normal[i] = point_normal[i] / point_normal[i].mold();
-//        cout << point_normal[i] << endl;
     }
 //    cout << "Points normal end" << endl;
 }

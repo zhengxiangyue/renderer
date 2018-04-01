@@ -11,7 +11,7 @@ using namespace std;
  * @param file_name
  * @return bool
  */
-bool homework1::set_object_position(const char* file_name, const vector<int> position ) {
+bool homework1::set_object_position(const char* file_name, const vector<double> position ) {
 
     int points_number, faces_number, temp_point_index, face_points_number, current_point_number = object.points.size();
     char buffer[128];
@@ -41,9 +41,9 @@ bool homework1::set_object_position(const char* file_name, const vector<int> pos
         istringstream each_line_in(each_line);
         each_line_in >> new_point.x >> new_point.y >> new_point.z;
 
-        new_point.x += position[0];
-        new_point.y += position[1];
-        new_point.z += position[2];
+            new_point.x += position[0];
+            new_point.y += position[1];
+            new_point.z += position[2];
 
         object.points.push_back(new_point);
         object.point_normal.push_back({0,0,0});
@@ -55,10 +55,12 @@ bool homework1::set_object_position(const char* file_name, const vector<int> pos
         getline(data_stream, each_line);
         istringstream each_line_in(each_line);
         each_line_in >> face_points_number;
+
         for(int j = 0 ; j < face_points_number ; ++j) {
             each_line_in >> temp_point_index;
             face.push_back(temp_point_index-1+current_point_number);
         }
+
         object.faces.push_back(face);
         object.face_normal.push_back(object.normal(face, i));
     }
@@ -88,18 +90,27 @@ void homework1::set_camera_position(const char* file_name) {
  * for each face in the polygon, if the normal Np .* N <= 0 , denote it as a back_face
  */
 void homework1::denote_back_face() {
-    back_face_indexs.clear();
+//    back_face_indexs.clear();
+
     for(int i = 0 ; i < object.faces.size() ; ++i) {
         // Some the polygons are denoted in anti-clockwise order
 
-        auto view = camera_position - object.points[object.faces[i][1]];
+        auto view = camera_position - object.points[object.faces[i][2]];
+
+        view = view / view.mold();
 
         double cos = object.face_normal[i].dot(view / view.mold());
 
-        cout << "Face " << i << ",View:" << view / view.mold() << ",Cos:" << cos << endl;
 
-        if(CLOCK_WISE_FACE && cos >= 0 || !CLOCK_WISE_FACE && cos <= 0) {
-            back_face_indexs.insert(i);
+        // slience the warning
+        if((CLOCK_WISE_FACE && cos >= 0) || (!CLOCK_WISE_FACE && cos <= 0)) {
+            if(back_face_indexs.find(i) == back_face_indexs.end()) {
+                back_face_indexs.insert(i);
+            }
+        }else{
+            if(back_face_indexs.find(i) != back_face_indexs.end()) {
+                back_face_indexs.erase(i);
+            }
         }
     }
 }

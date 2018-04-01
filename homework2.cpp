@@ -6,6 +6,11 @@
 
 /* homework2 */
 
+static unordered_set<int> suspect = {
+        2710
+};
+
+
 homework2::homework2() {
     window_x = WINDOW_X;
     window_y = WINDOW_Y;
@@ -33,57 +38,42 @@ homework2::homework2() {
  * Step 3: Update all intersection information
  */
 void homework2::scan_conversion(bool single_light_on) {
+
     /* each loop handel one face*/
-    srand(time(NULL));
-
-    set<int> red_set;
-
-    /* May render several times, initialize the buffers */
-
     z_buffer = vector<vector<double>>(window_x, vector<double>(window_y,1));
 
+    /* May render several times, initialize the buffers with background color */
     for(int i = 0 ; i < WINDOW_X ; ++i) {
         for(int j = 0 ; j < WINDOW_Y ; ++j) {
-            pixel_buffer[i][j][0] = 200;
-            pixel_buffer[i][j][1] = 200;
-            pixel_buffer[i][j][2] = 200;
+            pixel_buffer[i][j][0] = _back_r;
+            pixel_buffer[i][j][1] = _back_g;
+            pixel_buffer[i][j][2] = _back_b;
         }
     }
 
     /* Scan conversion for each face */
     for(int i = 0 ; i < object.faces.size() ; ++i) {
 
-        // only give color when first time render
-        if(face_color_r_buffer.size() == i){
-
-            if(single_light_on) {
-
-                uint8_t gray = 0;
-
-                vector3d normal = object.face_normal[i];
-
-                for(auto each:lights) {
-                    vector3d light_vector = each - point3d(0,0,0);
-                    gray += (128 + 128 * (normal / normal.mold()).dot(light_vector / light_vector.mold()));
-                }
-
-                face_color_r_buffer.push_back(gray);
-                face_color_g_buffer.push_back(gray);
-                face_color_b_buffer.push_back(gray);
-            }else {
-                uint8_t color_r = rand() % 255, color_g = rand() % 255, color_b = rand() % 255;
-                face_color_r_buffer.push_back(color_r);
-                face_color_g_buffer.push_back(color_g);
-                face_color_b_buffer.push_back(color_b);
-            }
-        }
-
-        // Do not consider back face, make sure
-//        if(back_face_indexs.find(i) != back_face_indexs.end())
-//            continue;
+        // Do not consider back face
+        if(back_face_indexs.find(i) != back_face_indexs.end())
+            continue;
 
         auto each_face = object.faces[i];
         int point_number = each_face.size();
+
+
+
+        int _gray = 0;
+
+        for(auto each:lights) {
+            vector3d light_vector = each.position - point3d(0,0,0);
+            light_vector = light_vector / light_vector.mold();
+            _gray += diffuse_term(1,each.intensity,object.face_normal[i],light_vector,15);
+        }
+
+        _gray += 60;
+
+        uint8_t constant_sading_color = _gray;
 
         /* build this face's edge table, before that, clear the edge table */
 
@@ -101,29 +91,26 @@ void homework2::scan_conversion(bool single_light_on) {
                     upper_point.y > 1 || upper_point.y < -1 || upper_point.x > 1 || upper_point.x < -1)
                 exit(12);
 
-            // if it is a horizontal edge, give color directly
-//            if(to_pixel(lower_point.y) == to_pixel(upper_point.y))
-//                continue;
+            // if it is a horizontal edge, don't worry
+            if(to_pixel(lower_point.y) == to_pixel(upper_point.y))
+                continue;
 
             if(lower_point.y > upper_point.y) {
                 swap(lower_point, upper_point);
                 swap(index_start, index_end);
             }
 
-
-            // Calculate the intensity of the lower poi
-
-            edge_table_element new_element(to_pixel(lower_point.y),
-                                           to_pixel(upper_point.y),
+            edge_table_element new_element(to_pixel(lower_point.y, true),
+                                           to_pixel(upper_point.y, true),
                                            to_double_pixel(lower_point.x),
                                            (double)(lower_point.x - upper_point.x) / (double)(lower_point.y - upper_point.y),
                                            lower_point.z,
-                                           (double)(lower_point.z - upper_point.z) / (double)(to_pixel(lower_point.y) - to_pixel(upper_point.y)),
+                                           (double)(lower_point.z - upper_point.z) / (double)(to_pixel(lower_point.y, true) - to_pixel(upper_point.y, true)),
                                            object.point_normal[index_start],
                                            object.point_normal[index_end]
             );
 
-            edge_table[to_pixel(lower_point.y)].push_back(new_element);
+            edge_table[to_pixel(lower_point.y, true)].push_back(new_element);
         }
 
         /* the edge table has been built, use scan line to decide the pixels' color */
@@ -133,7 +120,7 @@ void homework2::scan_conversion(bool single_light_on) {
         // ei is the current scan line's y coordinate
         int ei = 0;
 
-        // find the first y place to start todo: edge_table as data structure
+        // find the first y place to start TODO: edge_table as data structure
         for(; ei < window_y ; ++ei) if(edge_table[ei].size()) break;
 
         // each loop scan each line
@@ -160,65 +147,95 @@ void homework2::scan_conversion(bool single_light_on) {
 
             //  Fill in desired pixel values on scan line y by using pairs of xcoordinates from the AET
             for(double k = 0 ; k < active_edge_table.size() ; k += 2) {
+
                 edge_table_element *span_left = &active_edge_table[k], *span_right = &active_edge_table[k+1];
                 double z_current = span_left->z_start, z_delta_to_x = (span_left->z_start - span_right->z_start) / (span_left->x_start - span_right->x_start);
 
-                // According to intensity
-                vector3d la = span_left->normal_end * (double)(ei - span_left->y_start)/(double)(span_left->y_max - span_left->y_start)
-                              + span_left->normal_start * (double)(span_left->y_max - ei)/(double)(span_left->y_max - span_left->y_start),
+                // any time span_left->y_max >= span_left->y_start
+                vector3d
+                        la = span_left->normal_end * (double)(ei - span_left->y_start)/(double)(span_left->y_max - span_left->y_start)
+                         + span_left->normal_start * (double)(span_left->y_max - ei)/(double)(span_left->y_max - span_left->y_start),
 
-                lb = span_right->normal_end * (double)(ei - span_right->y_start)/(double)(span_right->y_max - span_right->y_start)
-                     + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
+                        lb = span_right->normal_end * (double)(ei - span_right->y_start)/(double)(span_right->y_max - span_right->y_start)
+                         + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
 
-                for(int l = (int)span_left->x_start  ; l <= (int)span_right->x_start ; ++l) {
-                    bool covered = false;
-                    if(z_current <= z_buffer[l][ei]){
+//                if((int)span_left->x_start == (int)span_right->x_start)
+//                    cout << "Single point" << endl;
 
-                        if(z_buffer[l][ei] != 1) covered = true;
+                // pixel scaned horizontally
+                for(int l = int(span_left->x_start)  ; l <= int(span_right->x_start) ; ++l) {
 
+//                    if(l == (int)span_right->x_start && SHADING_CONSTANT == _shading_model && (int)span_left->x_start == (int)span_right->x_start )
+//                        cout << "Problem" << endl;
+
+                    if(z_current < z_buffer[l][ei]){
+
+                        // update depth buffer
                         z_buffer[l][ei] = z_current;
 
-                        vector3d cur_normal = span_right->x_start - span_left->x_start == 0 ? la : (la * (span_right->x_start - (double)l) / (span_right->x_start - span_left->x_start) +
-                                lb * ((double)l - span_left->x_start) / (span_right->x_start - span_left->x_start));
+                        // Phong illumination is based on normal
+                        vector3d cur_normal;
 
-                        // Normalizing is so ******* important
+                        if(l == (int)span_left->x_start) {
+                            if(ei == span_left->y_start)
+                                cur_normal = span_left->normal_start;
+                            else
+                                cur_normal = la;
+                        }else {
+                            cur_normal = la * (span_right->x_start - l) + lb * (l - span_left->x_start);
+                        }
+
+                        // Normalizing is so important
                         cur_normal = cur_normal / cur_normal.mold();
 
+                        // for each light, give light on the object
+
                         int gray = 0;
+
                         for(auto each:lights) {
-                            vector3d light_vector = point3d(0,0,0) - each;
-
+                            vector3d light_vector = each.position - point3d(0,0,0);
                             light_vector = light_vector / light_vector.mold();
-
-                            gray += diffuse_trem(1,88,cur_normal,light_vector);
+                            int n = i >= 1890 ? 9 : 1;
+                            gray += diffuse_term(2,each.intensity,cur_normal,light_vector,n);
                         }
-//                        if(gray == 0) {
-//                            cout << "(" << ei << "," << l << ")" << endl;
-//                            gray = 255;
-//                        }
-                        // gray;//
 
-                        if(back_face_indexs.find(i) != back_face_indexs.end()) {
-                            pixel_buffer[ei][l][0] = covered ? 255 : 0;
-                            pixel_buffer[ei][l][1] = covered ? 0 : 255;
-                            pixel_buffer[ei][l][2] = 0;
-                            red_set.insert(i);
+                        gray += (i >= 1890 ? 30 : 80) ;
+
+                        if(gray < 0) gray = 0;
+                        if(gray > 255) gray = 255;
+
+                        if(i <= 1)
+                            gray = 230;
+                        else if(i <= 3)
+                            gray = 20;
+
+
+                        if(_shading_model == SHADING_CONSTANT) {
+//                            if(l == (int)span_left->x_start) {
+//                                pixel_buffer[ei][l][0] = 255;
+//                                pixel_buffer[ei][l][1] = 255;
+//                                pixel_buffer[ei][l][2] = 255;
+//                            }else {
+                                pixel_buffer[ei][l][0] = constant_sading_color;
+                                pixel_buffer[ei][l][1] = constant_sading_color;
+                                pixel_buffer[ei][l][2] = constant_sading_color;
+//                            }
+
+
                         }else {
-//                            cout << gray << endl;
-                            pixel_buffer[ei][l][0] = gray;//face_color_r_buffer[i];
-                            pixel_buffer[ei][l][1] = gray;//face_color_r_buffer[i];
-                            pixel_buffer[ei][l][2] = gray;//face_color_r_buffer[i];
+//                            if(l == (int)span_left->x_start) {
+//                                pixel_buffer[ei][l][0] = constant_sading_color;
+//                                pixel_buffer[ei][l][1] = constant_sading_color;
+//                                pixel_buffer[ei][l][2] = constant_sading_color;
+//                            }else {
+                                pixel_buffer[ei][l][0] = gray;
+                                pixel_buffer[ei][l][1] = gray;
+                                pixel_buffer[ei][l][2] = gray;
+//                            }
                         }
-
-//                        pixel_buffer[ei][l][0] = 255;
-//                        pixel_buffer[ei][l][1] = 255;
-//                        pixel_buffer[ei][l][2] = 255;
-
                     }
-
                     z_current += z_delta_to_x;
                 }
-
                 // Update x and z
                 span_left->x_start += span_left->delta;
                 span_right->x_start += span_right->delta;
@@ -228,8 +245,8 @@ void homework2::scan_conversion(bool single_light_on) {
             }
         }
     }
+//    cout << "______" << endl;
 
-    cout << "Size:" << back_face_indexs.size() << "," << red_set.size() << endl;
 }
 
 inline int homework2::to_pixel(double &value, bool shortten) {
@@ -241,8 +258,45 @@ inline double homework2::to_double_pixel(double &value) {
     return (value+1)*window_y/2.0;
 }
 
-void homework2::set_single_light_position(const point3d input_light) {
-    lights.push_back(input_light);
+void homework2::set_single_light_position(const point3d input_light, int intensity) {
+    lights.push_back(_light(input_light,intensity));
+}
+
+void homework2::set_shading_model(int shading_model) {
+    _shading_model = shading_model;
+}
+
+void homework2::set_background_color(uint8_t r, uint8_t g, uint8_t b) {
+    _back_r = r, _back_g = g, _back_b = b;
+}
+
+void homework2::set_illumination_model(int model) {
+
+}
+
+/**
+ *
+ * @param face_index
+ */
+int homework2::_give_constant_shading_color(const int &face_index, int ambiant_term = 30) {
+
+    int gray = 0;
+
+    for(auto each:lights) {
+        vector3d light_vector = each.position - point3d(0,0,0);
+        light_vector = light_vector / light_vector.mold();
+        gray += diffuse_term(1, each.intensity, object.face_normal[face_index], light_vector);
+    }
+
+    gray += ambiant_term;
+
+    if( gray > 255 )
+        return 255;
+    if( gray < 0)
+        return 0;
+
+    return gray;
+
 }
 
 

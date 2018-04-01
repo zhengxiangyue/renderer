@@ -1,5 +1,4 @@
-#include "homework1.h"
-#include "homework2.h"
+#include "homework3.h"
 using namespace std;
 
 /**
@@ -14,7 +13,7 @@ using namespace std;
  */
 homework2 hk;
 
-/*******  OpenGL GDI helper, to draw lines on a 2d window  *******/
+/*******  OpenGL GDI helper, to draw pixels in a 2d window  *******/
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -50,8 +49,8 @@ void glut_helper(int argn, char** arguments);
 /**
  * Usage:   built-folder$ ./graphic [object file.d]
  * Notes:   The code implements perspective transform from 3d points to 2d points, back face removed.
- *          The covered front faces are not removed
- *          The object local coordinate is considered the same as the world coordinate
+ *          light model
+ *          TODO:texture map
  */
 int main( int argn, char** arguments) {
 
@@ -59,13 +58,28 @@ int main( int argn, char** arguments) {
 //    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
 //    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
 
-    hk.set_object_position("assets/D/cow.d.txt",{0,1,2});
 
-    /* add other object you want */
+//    /* add other object you want */
+    if(!hk.set_object_position("assets/plane.d.txt",{-3,-3,0}))
+        return 12;
+    //    /* add other object you want */
+    if(!hk.set_object_position("assets/plane.d.txt",{3,3,0}))
+        return 12;
+    //    /* add other object you want */
+    if(!hk.set_object_position("assets/plane.d.txt",{-3,3,0}))
+        return 12;
+    //    /* add other object you want */
+    if(!hk.set_object_position("assets/plane.d.txt",{3,-3,0}))
+        return 12;
 
+//    if(!hk.set_object_position("assets/D/king.d.txt",{2,-5,0}))
+//        return 12;
+    if(!hk.set_object_position("assets/D/king.d.txt",{-3,-3,0}))
+        return 12;
     // ...
 
-//    if(!hk.set_object_position("assets/D/knight.d.txt",{4,4,4})) return 12;
+    if(!hk.set_object_position("assets/D/knight.d.txt",{3,3,0}))
+        return 12;
 
     // After set all object, compute normal. Kind of wired to compte here... ...
     hk.object.compute_secene_point_normal();
@@ -73,17 +87,24 @@ int main( int argn, char** arguments) {
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
     hk.set_camera_position("assets/camera_position.txt");
 
-    /* Set simple light here */
+    /* put light, currently just intensity TODO: let light be more real... */
+    hk.set_single_light_position({-10,10,10}, 80);
+//    hk.set_single_light_position({1,-5,10}, 100);
+//    hk.set_single_light_position({2,-8,10}, 100);
+    hk.set_single_light_position({-2,-8,4}, 50);
+    hk.set_single_light_position({10,10,0}, 50);
 
-    hk.set_single_light_position({100,100,100});
-    hk.set_single_light_position({100,100,-100});
-    hk.set_single_light_position({-100,-100,100});
+    hk.set_background_color(50,50,50);
+
+//    hk.set_shading_model(SHADING_CONSTANT);
+
+    hk.set_illumination_model(ILLUMINATION_MULTIPLE);
 
     // Main work is done here
     hk.object_points_to_screen_points();
 
     // show the screen points;
-    hk.scan_conversion(false);
+    hk.scan_conversion();
 
     // Render work has done, since I have no power to write a GDI, let opengl help me
     glut_helper(argn, arguments);
@@ -134,9 +155,9 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             exit(0);
             break;
         case 'w':
-            hk.camera_position.x /= 1.3;
-            hk.camera_position.y /= 1.3;
-            hk.camera_position.z /= 1.3;
+            hk.camera_position.x /= 1.1;
+            hk.camera_position.y /= 1.1;
+            hk.camera_position.z /= 1.1;
             break;
         case 's':
             hk.camera_position.x *= 1.3;
@@ -144,8 +165,8 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             hk.camera_position.z *= 1.3;
             break;
         case 'z':
-            hk.camera_position.x =  x0* cos(0.1) +  y0* sin(0.1);
-            hk.camera_position.y = -x0 * sin(0.1) + y0 * cos(0.1);
+            hk.camera_position.x =  x0* cos(0.05) +  y0* sin(0.05);
+            hk.camera_position.y = -x0 * sin(0.05) + y0 * cos(0.05);
             break;
         case 'x':
             hk.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
@@ -173,8 +194,6 @@ void keyboardFunc(unsigned char key, int x, int y ) {
         case 'v':
             hk.camera_position.z ++;
             break;
-
-
     }
 
     /* Re-render the scene */
@@ -195,7 +214,7 @@ void glut_helper(int argn, char **arguments)  {
 
     glutInitWindowSize(1000, 1000);
 
-    glutCreateWindow("Graphics II - Assignment 1,2");
+    glutCreateWindow("Graphics II - Assignment 3");
 
     glutReshapeFunc(prevent_resize);
 

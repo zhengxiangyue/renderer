@@ -186,5 +186,14 @@ struct polygonal_object{
     void compute_secene_point_normal();
 };
 
+/**
+ *
+ */
+struct _light{
+    point3d position;
+    int intensity;
+    _light(point3d position, int intensity):position(position), intensity(intensity){};
+};
+
 
 #endif //GRAPHIC_MYGRAPHICS_H

@@ -15,12 +15,21 @@
 #include <unordered_set>
 #include <set>
 
-#define WINDOW_X 1000
-#define WINDOW_Y 1000
+#define WINDOW_X                    1000
+#define WINDOW_Y                    1000
 
-#define DEBUG_MODE false
+#define DEBUG_MODE                  false
 
-#define CLOCK_WISE_FACE true
+#define CLOCK_WISE_FACE             false
+
+#define SHADING_CONSTANT            1
+#define SHADING_GOURAUD             2
+#define SHADING_PHONG               3
+
+#define ILLUMINATION_DIFFUSE        1
+#define ILLUMINATION_MULTIPLE       2
+
+#define oops(m,x){perror(m); exit(x);}
 
 
 using namespace std;
@@ -66,7 +75,7 @@ public:
     /**
      * Read from a ".d" file which contain the information of the object
      */
-    bool set_object_position(const char*, const vector<int>);
+    bool set_object_position(const char*, const vector<double>);
 
     /**
      * Read from a ".txt" file which contain 9 numbers to denote the pattern of the camera

@@ -3,5 +3,3 @@
 //
 
 #include "homework3.h"
-
-

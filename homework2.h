@@ -34,12 +34,26 @@ public:
     /**
      * Single light source
      */
-    vector<point3d> lights;
+    vector<_light> lights;
+
+    /**
+     * SHADING_CONSTANT
+     * SHADING_GOUROUD
+     * SHADING_PHONG
+     */
+    int _shading_model;
+
+    /**
+     * ILLUMINATION_DIFFUSE
+     * ILLUMINATION_SPECULAR
+     * ILLUMINATION_
+     */
+    int _illumination_model;
 
     /**
      * Set single light source position
      */
-    void set_single_light_position(point3d);
+    void set_single_light_position(point3d, int intensity);
 
     /**
      * z buffer
@@ -65,14 +79,42 @@ public:
      */
     homework2();
 
+    /**
+     *
+     * @param value
+     * @param shortten
+     * @return
+     */
     int to_pixel(double &value, bool shortten = false);
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     double to_double_pixel(double &value);
 
     /**
      * for each polygon, create its edge_table
      */
     void scan_conversion(bool single_light_on = false);
+
+    int _back_r, _back_g, _back_b;
+
+    /**
+     *
+     * @param shading_model
+     */
+    void set_shading_model(int shading_model);
+
+    void set_background_color(uint8_t r, uint8_t g, uint8_t b);
+
+    void set_illumination_model(int);
+
+    /**
+     * constant shading
+     */
+    int _give_constant_shading_color(const int &face_index, int ambiant_term);
 };
 
 
