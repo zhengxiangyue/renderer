@@ -63,3 +63,8 @@ In assignment2, the scan line algorithm and z-buffer algorithm are implemented.
 The implementation of simple illumination model:
 
 ![knight2.gif](https://github.com/Zhengxiangyue/graphicsAssignments/blob/master/result/Knight2.gif?raw=true)
+
+#### Assignment3 + 4 - Illumintation model, texture map
+
+![knight2.gif](https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/test/result/texture.gif?raw=true)
+
