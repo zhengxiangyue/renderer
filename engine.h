@@ -591,15 +591,7 @@ void engine::scan_conversion() {
 
                             lb = span_right->normal_end * (double)(ei - span_right->y_start)/(double)(span_right->y_max - span_right->y_start)
                                  + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
-
-//                if((int)span_left->x_start == (int)span_right->x_start)
-//                    cout << "Single point" << endl;
-//
-//
-//                    cout << "Line start , left : " << span_left->texture_start.first << " , right : " << span_right->texture_start.first << endl;
-
-//                    cout << "line start: left(" << span_left->texture_start.first << "), right(" << span_right->texture_start.first << ")" << endl;
-
+                    
                     // pixel scaned horizontally
                     for(int l = int(span_left->x_start)  ; l < int(span_right->x_start) ; ++l) {
 
@@ -620,12 +612,6 @@ void engine::scan_conversion() {
                                                     ? span_left->texture_start.second
                                                     : span_left->texture_start.second * ((int)span_right->x_start - l) / ((int)span_right->x_start - (int)span_left->x_start)
                                                       + span_right->texture_start.second * (l - (int)span_left->x_start) / ((int)span_right->x_start - (int)span_left->x_start);
-
-//                            cout << "(" << span_left->texture_start.first << "," << span_right->texture_start.first << ")" <<
-//                                 ((int)span_right->x_start - l) << "," << (l - (int)span_left->x_start) << "," << ((int)span_right->x_start - (int)span_left->x_start) << "," <<
-//                                 span_left->texture_start.first * ((int)span_right->x_start - l) / ((int)span_right->x_start - (int)span_left->x_start)
-//                                    + span_right->texture_start.first *  (l - (int)span_left->x_start) / ((int)span_right->x_start - (int)span_left->x_start)
-//                                 << endl;
 
 
                             if(l == (int)span_left->x_start) {
@@ -650,27 +636,10 @@ void engine::scan_conversion() {
 
                             if(gray > 255) gray = 255;
 
-                            // calculate texture coordinate
-
-//                            cout << real_texture_x << endl;
-
                             double inten = (double)gray / 100.0;
-
-//                            real_texture_x = real_texture_x < 0 ? 0 : real_texture_x;
-//                            real_texture_x = real_texture_x >= 1 ? 0.99 : real_texture_x;
-//
-//                            real_texture_y = real_texture_y < 0 ? 0 : real_texture_y;
-//                            real_texture_y = real_texture_y >= 1 ? 0.99 : real_texture_y;
-
-//                            cout << real_texture_x << "," << real_texture_y << endl;
 
                             int texture_x = real_texture_x * each_object.texture_map.size(),
                             texture_y = real_texture_y * each_object.texture_map[0].size();
-
-//                            cout << texture_x << "," << texture_y << endl;
-
-//                            if(span_left->texture_start.first < 0.3)
-//                                cout << span_left->texture_start.first << endl;
 
                             auto __r = max(min(each_object.texture_map[texture_x][texture_y][0] * inten  + 30,255.0), 0.0);
                             auto __g = max(min(each_object.texture_map[texture_x][texture_y][1] * inten  + 30,255.0), 0.0);
@@ -682,28 +651,10 @@ void engine::scan_conversion() {
                             if(o_k == 4 || o_k == 5)
                                 __r = __g = __b = 200;
 
-//                            auto __r = real_texture_x * 255;
-//                            auto __g = real_texture_x * 255;
-//                            auto __b = real_texture_x * 255;
 
-//                            auto __r = gray;
-//                            auto __g = gray;
-//                            auto __b = gray;
-
-//                            auto __r = polygon_random_color;
-//                            auto __g = polygon_random_color;
-//                            auto __b = polygon_random_color;
-//                            cout << span_left->texture_start.first << endl;
-//                            if(l == (int)span_left->x_start) {
-                                pixel_buffer[ei][l][0] = __r;
-                                pixel_buffer[ei][l][1] = __g;
-                                pixel_buffer[ei][l][2] = __b;
-//                            }
-//                            pixel_buffer[ei][l][0] =  each_object.texture_map[texture_x][texture_y][0];
-//                            pixel_buffer[ei][l][1] =  each_object.texture_map[texture_x][texture_y][1];
-//                            pixel_buffer[ei][l][2] =  each_object.texture_map[texture_x][texture_y][2];
-
-//                            cout << each_object.texture_map[texture_x][texture_y][0] << endl;
+                            pixel_buffer[ei][l][0] = __r;
+                            pixel_buffer[ei][l][1] = __g;
+                            pixel_buffer[ei][l][2] = __b;
 
                         }
                         z_current += z_delta_to_x;
@@ -718,10 +669,6 @@ void engine::scan_conversion() {
                     // update texture map
                     span_left->texture_start.first += span_left->texture_delta_to_y.first, span_left->texture_start.second += span_left->texture_delta_to_y.second;
                     span_right->texture_start.first += span_right->texture_delta_to_y.first, span_right->texture_start.second += span_right->texture_delta_to_y.second;
-//                    cout << span_left->texture_delta_to_y.first << "  ,  " << span_left->texture_delta_to_y.second << endl;
-//
-//                    if(abs(span_left->texture_start.first) >= 1)
-//                        span_left->texture_start.first = 0;
 
                 }
             }
@@ -729,8 +676,6 @@ void engine::scan_conversion() {
         }
 
     }
-//    cout << "______" << endl;
-
 }
 
 
