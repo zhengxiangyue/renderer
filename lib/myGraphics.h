@@ -8,10 +8,10 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <fstream>
 #include "matrix.h"
 
 using namespace std;
-
 
 /**
  * vector is denoted as (x, y, z)
@@ -103,6 +103,14 @@ struct point3d{
 };
 
 /**
+ * object_point is a point with objec propoty
+ */
+struct object_point3d : public point3d {
+
+};
+
+
+/**
  * edge table element
  */
 struct edge_table_element{
@@ -115,10 +123,12 @@ struct edge_table_element{
     double z_start;         // for z_buffer y increment
     double z_delta_to_y;      //
 
+    pair<double, double> texture_start, texture_delta_to_y;
+
     vector3d normal_start;
     vector3d normal_end;
 
-    edge_table_element(int y_start, int y_max, double x_start, double delta, double z_start, double z_delta_to_y, vector3d normal_start, vector3d normal_end) :
+    edge_table_element(int y_start, int y_max, double x_start, double delta, double z_start, double z_delta_to_y, vector3d normal_start, vector3d normal_end, pair<double,double> texture_start, pair<double, double> texture_delta_to_y) :
             y_start(y_start),
             y_max(y_max),
             x_start(x_start),
@@ -126,7 +136,16 @@ struct edge_table_element{
             z_start(z_start),
             z_delta_to_y(z_delta_to_y),
             normal_start(normal_start),
-            normal_end(normal_end){}
+            normal_end(normal_end),
+            texture_start(texture_start),
+            texture_delta_to_y(texture_delta_to_y)
+    {}
+};
+
+struct act_cmp{
+    bool operator ()(edge_table_element& a, edge_table_element& b) {
+        return a.x_start < b.x_start;
+    }
 };
 
 /**
@@ -150,7 +169,7 @@ ostream& operator <<(ostream &co, const vector3d &vec);
  * several points consist the object
  * while faces are denoted by the point index, clockwise
  */
-struct polygonal_object{
+struct  polygonal_object{
 
     /**
      * points in 3d world
@@ -195,5 +214,8 @@ struct _light{
     _light(point3d position, int intensity):position(position), intensity(intensity){};
 };
 
+vector<vector<vector<uint8_t>>> read_bmp_to_buffer(const char* filename);
+
+double co_to_degree(double cosa_t, double sina_t);
 
 #endif //GRAPHIC_MYGRAPHICS_H

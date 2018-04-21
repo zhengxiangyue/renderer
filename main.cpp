@@ -61,25 +61,25 @@ int main( int argn, char** arguments) {
 
 //    /* add other object you want */
     if(!hk.set_object_position("assets/plane.d.txt",{-3,-3,0}))
-        return 12;
+        return 10;
     //    /* add other object you want */
     if(!hk.set_object_position("assets/plane.d.txt",{3,3,0}))
-        return 12;
+        return 13;
     //    /* add other object you want */
     if(!hk.set_object_position("assets/plane.d.txt",{-3,3,0}))
-        return 12;
+        return 14;
     //    /* add other object you want */
     if(!hk.set_object_position("assets/plane.d.txt",{3,-3,0}))
-        return 12;
+        return 15;
 
 //    if(!hk.set_object_position("assets/D/king.d.txt",{2,-5,0}))
 //        return 12;
     if(!hk.set_object_position("assets/D/king.d.txt",{-3,-3,0}))
-        return 12;
+        return 16;
     // ...
 
     if(!hk.set_object_position("assets/D/knight.d.txt",{3,3,0}))
-        return 12;
+        return 17;
 
     // After set all object, compute normal. Kind of wired to compte here... ...
     hk.object.compute_secene_point_normal();
@@ -122,28 +122,28 @@ void glut_display()  {
      * * display for homework 1
      * */
 
-//    glClearColor(0.0, 0.0, 0.0, 0.0);
-//    glClear(GL_COLOR_BUFFER_BIT);
-//
-//    glColor3f(1.0, 0.5, 0.5);
-//
-//    for(int i = 0 ; i < hk.object.faces.size() ; ++i) {
-//        if(hk.back_face_indexs.find(i) != hk.back_face_indexs.end()) continue;
-//        glBegin(GL_LINE_LOOP); // GL_LINE_LOOP  GL_POINTS
-//        for(auto &each_point:hk.object.faces[i]) {
-//            glVertex2f(hk.screen_points[each_point].x, hk.screen_points[each_point].y);
-//        }
-//        glEnd();
-//    }
-//    glFlush();
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glColor3f(1.0, 0.5, 0.5);
+
+    for(int i = 0 ; i < hk.object.faces.size() ; ++i) {
+        if(hk.back_face_indexs.find(i) != hk.back_face_indexs.end()) continue;
+        glBegin(GL_LINE_LOOP); // GL_LINE_LOOP  GL_POINTS
+        for(auto &each_point:hk.object.faces[i]) {
+            glVertex2f(hk.screen_points[each_point].x, hk.screen_points[each_point].y);
+        }
+        glEnd();
+    }
+    glFlush();
 
     /*
      * display for homework 2, draw the pixels directly
      * */
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glDrawPixels(hk.window_y,hk.window_y, GL_RGB, GL_UNSIGNED_BYTE, hk.pixel_buffer);
-    glFlush();
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    glDrawPixels(hk.window_y,hk.window_y, GL_RGB, GL_UNSIGNED_BYTE, hk.pixel_buffer);
+//    glFlush();
 }
 
 void keyboardFunc(unsigned char key, int x, int y ) {

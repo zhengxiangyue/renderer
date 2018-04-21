@@ -12,14 +12,19 @@ add_library(homework3 homework3)
 
 # the only executable file is main.cpp
 add_executable(graphic main)
+add_executable(engine engine.cpp)
+add_executable(mytest mytest.cpp)
 
 target_link_libraries(homework1 myGraphics)
 target_link_libraries(homework2 myGraphics)
 target_link_libraries(homework3 myGraphics)
+target_link_libraries(engine myGraphics)
+target_link_libraries(mytest myGraphics)
 
 target_link_libraries(homework1 illumination)
 target_link_libraries(homework2 illumination)
 target_link_libraries(homework3 illumination)
+target_link_libraries(engine illumination)
 
 target_link_libraries(graphic homework1)
 target_link_libraries(graphic homework2)

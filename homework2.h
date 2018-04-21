@@ -7,12 +7,6 @@
 #include "homework1.h"
 #include <queue>
 
-struct act_cmp{
-    bool operator ()(edge_table_element& a, edge_table_element& b) {
-        return a.x_start < b.x_start;
-    }
-};
-
 class homework2:public homework1{
 public:
 

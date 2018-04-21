@@ -162,3 +162,38 @@ void polygonal_object::compute_secene_point_normal() {
     }
 //    cout << "Points normal end" << endl;
 }
+
+/* helper function */
+vector<vector<vector<uint8_t>>> read_bmp_to_buffer(const char* filename) {
+    ifstream imgStream(filename);
+
+    // 前 54 字节包含长宽信息
+    char info[54];
+
+    imgStream.read(info, 54);
+
+    int width = *(int*)&info[18], height = *(int*)&info[22], row_data_length = (width*3 + 3) & (~3);
+
+    auto buffer = vector<vector<vector<uint8_t>>>(height, vector<vector<uint8_t>>(width, vector<uint8_t>(3)));
+
+    char *data = new char[row_data_length];
+
+    for(int i = 0 ; i < height ; ++i) {
+        imgStream.read(data, row_data_length);
+        for(int j = 0 ; j < width * 3 ; j += 3)
+            buffer[i][j / 3][0] = (int) data[j + 2], buffer[i][j / 3][1] = (int) data[j + 1], buffer[i][j/3][2] = (int) data[j];
+    }
+
+    delete[] data;
+
+    return buffer;
+}
+
+double co_to_degree(double cosa_t, double sina_t) {
+    double angle_candidate = acos(cosa_t);
+//    cout << "two candidates are : " << angle_candidate * 180 / M_PI << "," << 360 - angle_candidate * 180 / M_PI << endl;
+//    cout << "sin candidates is " << asin(sina_t) * 180 / M_PI << endl;
+//    cout << sina_t << "," << sin(angle_candidate) << endl;
+//    cout << (sina_t == sin(angle_candidate)) << endl;
+    return  (int)((100)*sina_t) == (int)((100)*sin(angle_candidate)) ? angle_candidate * 180 / M_PI : 360 - angle_candidate * 180 / M_PI;
+}
