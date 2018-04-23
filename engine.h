@@ -591,7 +591,7 @@ void engine::scan_conversion() {
 
                             lb = span_right->normal_end * (double)(ei - span_right->y_start)/(double)(span_right->y_max - span_right->y_start)
                                  + span_right->normal_start * (double)(span_right->y_max - ei)/(double)(span_right->y_max - span_right->y_start);
-                    
+
                     // pixel scaned horizontally
                     for(int l = int(span_left->x_start)  ; l < int(span_right->x_start) ; ++l) {
 
@@ -641,15 +641,15 @@ void engine::scan_conversion() {
                             int texture_x = real_texture_x * each_object.texture_map.size(),
                             texture_y = real_texture_y * each_object.texture_map[0].size();
 
-                            auto __r = max(min(each_object.texture_map[texture_x][texture_y][0] * inten  + 30,255.0), 0.0);
-                            auto __g = max(min(each_object.texture_map[texture_x][texture_y][1] * inten  + 30,255.0), 0.0);
-                            auto __b = max(min(each_object.texture_map[texture_x][texture_y][2] * inten  + 30,255.0), 0.0);
+                            auto __r = max(min(each_object.texture_map[texture_x][texture_y][0] * inten  + 60,255.0), 0.0);
+                            auto __g = max(min(each_object.texture_map[texture_x][texture_y][1] * inten  + 60,255.0), 0.0);
+                            auto __b = max(min(each_object.texture_map[texture_x][texture_y][2] * inten  + 60,255.0), 0.0);
 
-                            if(o_k == 2 || o_k == 3)
-                                __r = __g = __b = 0;
-
-                            if(o_k == 4 || o_k == 5)
-                                __r = __g = __b = 200;
+//                            if(o_k == 2 || o_k == 3)
+//                                __r = __g = __b = 0;
+//
+//                            if(o_k == 4 || o_k == 5)
+//                                __r = __g = __b = 200;
 
 
                             pixel_buffer[ei][l][0] = __r;
