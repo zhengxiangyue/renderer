@@ -36,45 +36,15 @@ void glut_helper(int argn, char** arguments);
 
 int main( int argn, char** arguments ) {
 
-    if(!_engine.set_object_position("assets/D/knight.d.txt",{3,3,0}, "assets/cola.bmp"))
-        return 12;
 
-    if(!_engine.set_object_position("assets/D/king.d.txt",{-3,-3,0}, "assets/KFC.bmp"))
-        return 12;
-//    /* add other object you want */
-    if(!_engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "const-black"))
-        return 10;
-    //    /* add other object you want */
-    if(!_engine.set_object_position("assets/plane.d.txt",{3,3,0}, "const-black"))
-        return 13;
-    //    /* add other object you want */
-    if(!_engine.set_object_position("assets/plane.d.txt",{-3,3,0}, "const-white"))
-        return 14;
-    //    /* add other object you want */
-    if(!_engine.set_object_position("assets/plane.d.txt",{3,-3,0}, "const-white"))
-        return 15;
+    _engine.set_object_position("assets/D/knight.d.txt",{3,3,0}, "assets/cola.bmp");
+    _engine.set_object_position("assets/D/king.d.txt",{-3,-3,0}, "assets/KFC.bmp");
+    _engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "const-black");
+    _engine.set_object_position("assets/plane.d.txt",{3,3,0}, "const-black");
+    _engine.set_object_position("assets/plane.d.txt",{-3,3,0}, "const-white");
+    _engine.set_object_position("assets/plane.d.txt",{3,-3,0}, "const-white");
 
-
-    //    /* add other object you want */
-//    if(!_engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "assets/cola.bmp"))
-//        return 10;
-//    //    /* add other object you want */
-//    if(!_engine.set_object_position("assets/plane.d.txt",{3,3,0}))
-//        return 13;
-//    //    /* add other object you want */
-//    if(!_engine.set_object_position("assets/plane.d.txt",{-3,3,0}))
-//        return 14;
-//    //    /* add other object you want */
-//    if(!_engine.set_object_position("assets/plane.d.txt",{3,-3,0}))
-//        return 15;
-
-//    if(!hk.set_object_position("assets/D/king.d.txt",{2,-5,0}))
-//        return 12;
-//    if(!_engine.set_object_position("assets/D/better-ball.d.txt",{0,0,0}, "assets/rainbow.bmp"))
-//        return 16;
-
-//    if(!_engine.set_object_position("assets/D/car.d.txt",{10,10,10}))
-//        return 12;
+    /* add other object you want */
 
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
     _engine.set_camera_position("assets/camera_position.txt");
@@ -117,11 +87,9 @@ void glut_display()  {
 //    glFlush();
 
     /*
-     * display for homework 2, draw the pixels directly
+     * display for homework 2, draw the pixels
      * */
     glClear(GL_COLOR_BUFFER_BIT);
-
-    glDrawPixels( WINDOW_X , WINDOW_Y , GL_RGB, GL_UNSIGNED_BYTE, _engine.pixel_buffer);
     glDrawPixels( WINDOW_X , WINDOW_Y , GL_RGB, GL_UNSIGNED_BYTE, _engine.pixel_buffer);
     glFlush();
 }
