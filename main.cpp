@@ -1,19 +1,7 @@
-#include "homework3.h"
-using namespace std;
 
-/**
- * In the homework1, we have an object and a camera
- * we are to use the perspective transorm to convert all 3d points onto a plane
- */
-//homework1 hk;
+#include "engine.h"
 
-/**
- * In the homework2, implement z-buffer and scan-conversion algorithm to color the faces
- * and un-display the covered front faces
- */
-homework2 hk;
-
-/*******  OpenGL GDI helper, to draw pixels in a 2d window  *******/
+engine _engine;
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -46,74 +34,62 @@ void glut_helper(int argn, char** arguments);
 
 /******* Helper end *******/
 
-/**
- * Usage:   built-folder$ ./graphic [object file.d]
- * Notes:   The code implements perspective transform from 3d points to 2d points, back face removed.
- *          light model
- *          TODO:texture map
- */
-int main( int argn, char** arguments) {
+int main( int argn, char** arguments ) {
 
-    // Set object in the world - Read object data from the file, the function code locate at homework1.cpp
-//    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
-//    if(!hk.set_object_position("assets/test_obj2.d.txt",{0,0,0})) return 12;
+    if(!_engine.set_object_position("assets/D/knight.d.txt",{3,3,0}, "assets/cola.bmp"))
+        return 12;
 
-
+    if(!_engine.set_object_position("assets/D/king.d.txt",{-3,-3,0}, "assets/KFC.bmp"))
+        return 12;
 //    /* add other object you want */
-    if(!hk.set_object_position("assets/plane.d.txt",{-3,-3,0}))
+    if(!_engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "const-black"))
         return 10;
     //    /* add other object you want */
-    if(!hk.set_object_position("assets/plane.d.txt",{3,3,0}))
+    if(!_engine.set_object_position("assets/plane.d.txt",{3,3,0}, "const-black"))
         return 13;
     //    /* add other object you want */
-    if(!hk.set_object_position("assets/plane.d.txt",{-3,3,0}))
+    if(!_engine.set_object_position("assets/plane.d.txt",{-3,3,0}, "const-white"))
         return 14;
     //    /* add other object you want */
-    if(!hk.set_object_position("assets/plane.d.txt",{3,-3,0}))
+    if(!_engine.set_object_position("assets/plane.d.txt",{3,-3,0}, "const-white"))
         return 15;
+
+
+    //    /* add other object you want */
+//    if(!_engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "assets/cola.bmp"))
+//        return 10;
+//    //    /* add other object you want */
+//    if(!_engine.set_object_position("assets/plane.d.txt",{3,3,0}))
+//        return 13;
+//    //    /* add other object you want */
+//    if(!_engine.set_object_position("assets/plane.d.txt",{-3,3,0}))
+//        return 14;
+//    //    /* add other object you want */
+//    if(!_engine.set_object_position("assets/plane.d.txt",{3,-3,0}))
+//        return 15;
 
 //    if(!hk.set_object_position("assets/D/king.d.txt",{2,-5,0}))
 //        return 12;
-    if(!hk.set_object_position("assets/D/king.d.txt",{-3,-3,0}))
-        return 16;
-    // ...
+//    if(!_engine.set_object_position("assets/D/better-ball.d.txt",{0,0,0}, "assets/rainbow.bmp"))
+//        return 16;
 
-    if(!hk.set_object_position("assets/D/knight.d.txt",{3,3,0}))
-        return 17;
-
-    // After set all object, compute normal. Kind of wired to compte here... ...
-    hk.object.compute_secene_point_normal();
+//    if(!_engine.set_object_position("assets/D/car.d.txt",{10,10,10}))
+//        return 12;
 
     // Set camera in the world - Read camera data from the file, the function code locate at homework1.cpp
-    hk.set_camera_position("assets/camera_position.txt");
+    _engine.set_camera_position("assets/camera_position.txt");
 
-    /* put light, currently just intensity TODO: let light be more real... */
-    hk.set_single_light_position({-10,10,10}, 80);
-//    hk.set_single_light_position({1,-5,10}, 100);
-//    hk.set_single_light_position({2,-8,10}, 100);
-    hk.set_single_light_position({-2,-8,4}, 50);
-    hk.set_single_light_position({10,10,0}, 50);
+    _engine.object_points_to_screen_points();
 
-    hk.set_background_color(50,50,50);
+    _engine.scan_conversion();
 
-//    hk.set_shading_model(SHADING_CONSTANT);
-
-    hk.set_illumination_model(ILLUMINATION_MULTIPLE);
-
-    // Main work is done here
-    hk.object_points_to_screen_points();
-
-    // show the screen points;
-    hk.scan_conversion();
-
-    // Render work has done, since I have no power to write a GDI, let opengl help me
     glut_helper(argn, arguments);
 
-    return 0;
 }
 
+
 void prevent_resize(int width, int height)  {
-    glutReshapeWindow( width, height);
+    glutReshapeWindow( width, height );
 }
 
 void glut_display()  {
@@ -122,32 +98,36 @@ void glut_display()  {
      * * display for homework 1
      * */
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glColor3f(1.0, 0.5, 0.5);
-
-    for(int i = 0 ; i < hk.object.faces.size() ; ++i) {
-        if(hk.back_face_indexs.find(i) != hk.back_face_indexs.end()) continue;
-        glBegin(GL_LINE_LOOP); // GL_LINE_LOOP  GL_POINTS
-        for(auto &each_point:hk.object.faces[i]) {
-            glVertex2f(hk.screen_points[each_point].x, hk.screen_points[each_point].y);
-        }
-        glEnd();
-    }
-    glFlush();
+//    glClearColor(255.0, 255.0, 255.0, 0.0);
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    glColor3f(1.0, 0.5, 0.5);
+//
+//    for(int i = 0 ; i < _engine._scene.objects.size() ; ++i) {
+//        for(int j = 0 ; j < _engine._scene.objects[i].faces.size() ; ++j) {
+//            if(_engine.back_face_indexs.find({i,j}) != _engine.back_face_indexs.end())
+//                continue;
+//            glBegin(GL_LINE_LOOP);
+//
+//            for(auto &each_point:_engine._scene.objects[i].faces[j])
+//                glVertex2f(_engine._scene.objects[i].points[each_point].screen_point.x, _engine._scene.objects[i].points[each_point].screen_point.y);
+//            glEnd();
+//        }
+//    }
+//    glFlush();
 
     /*
      * display for homework 2, draw the pixels directly
      * */
-//    glClear(GL_COLOR_BUFFER_BIT);
-//
-//    glDrawPixels(hk.window_y,hk.window_y, GL_RGB, GL_UNSIGNED_BYTE, hk.pixel_buffer);
-//    glFlush();
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawPixels( WINDOW_X , WINDOW_Y , GL_RGB, GL_UNSIGNED_BYTE, _engine.pixel_buffer);
+    glDrawPixels( WINDOW_X , WINDOW_Y , GL_RGB, GL_UNSIGNED_BYTE, _engine.pixel_buffer);
+    glFlush();
 }
 
 void keyboardFunc(unsigned char key, int x, int y ) {
-    double x0 = hk.camera_position.x, y0 = hk.camera_position.y, z0 = hk.camera_position.z;
+    double x0 = _engine._scene.camera_position.x, y0 = _engine._scene.camera_position.y, z0 = _engine._scene.camera_position.z;
 
     switch ( key )
     {
@@ -155,50 +135,50 @@ void keyboardFunc(unsigned char key, int x, int y ) {
             exit(0);
             break;
         case 'w':
-            hk.camera_position.x /= 1.1;
-            hk.camera_position.y /= 1.1;
-            hk.camera_position.z /= 1.1;
+            _engine._scene.camera_position.x /= 1.1;
+            _engine._scene.camera_position.y /= 1.1;
+            _engine._scene.camera_position.z /= 1.1;
             break;
         case 's':
-            hk.camera_position.x *= 1.3;
-            hk.camera_position.y *= 1.3;
-            hk.camera_position.z *= 1.3;
+            _engine._scene.camera_position.x *= 1.3;
+            _engine._scene.camera_position.y *= 1.3;
+            _engine._scene.camera_position.z *= 1.3;
             break;
         case 'z':
-            hk.camera_position.x =  x0* cos(0.05) +  y0* sin(0.05);
-            hk.camera_position.y = -x0 * sin(0.05) + y0 * cos(0.05);
+            _engine._scene.camera_position.x =  x0* cos(0.05) +  y0* sin(0.05);
+            _engine._scene.camera_position.y = -x0 * sin(0.05) + y0 * cos(0.05);
             break;
         case 'x':
-            hk.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
-            hk.camera_position.z = -y0 * sin(0.1) + z0 * cos(0.1);
+            _engine._scene.camera_position.y =  y0* cos(0.1) +  z0* sin(0.1);
+            _engine._scene.camera_position.z = -y0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'y':
-            hk.camera_position.x =  x0* cos(0.1) +  z0* sin(0.1);
-            hk.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
+            _engine._scene.camera_position.x =  x0* cos(0.1) +  z0* sin(0.1);
+            _engine._scene.camera_position.z = -x0 * sin(0.1) + z0 * cos(0.1);
             break;
         case 'e':
-            hk.camera_position.x --;
+            _engine._scene.camera_position.x --;
             break;
         case 'r':
-            hk.camera_position.x ++;
+            _engine._scene.camera_position.x ++;
             break;
         case 'd':
-            hk.camera_position.y --;
+            _engine._scene.camera_position.y --;
             break;
         case 'f':
-            hk.camera_position.y ++;
+            _engine._scene.camera_position.y ++;
             break;
         case 'c':
-            hk.camera_position.z --;
+            _engine._scene.camera_position.z --;
             break;
         case 'v':
-            hk.camera_position.z ++;
+            _engine._scene.camera_position.z ++;
             break;
     }
 
     /* Re-render the scene */
-    hk.object_points_to_screen_points();
-    hk.scan_conversion();
+    _engine.object_points_to_screen_points();
+    _engine.scan_conversion();
 
     /* Refresh displaying window*/
     glutPostRedisplay();
@@ -214,7 +194,7 @@ void glut_helper(int argn, char **arguments)  {
 
     glutInitWindowSize(1000, 1000);
 
-    glutCreateWindow("Graphics II - Assignment 3");
+    glutCreateWindow("Graphics II - XiangYue Zheng");
 
     glutReshapeFunc(prevent_resize);
 
@@ -225,4 +205,3 @@ void glut_helper(int argn, char **arguments)  {
     glutMainLoop();
 
 }
-

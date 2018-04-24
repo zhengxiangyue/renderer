@@ -6,26 +6,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -framework GLUT -framework Op
 add_subdirectory(lib)
 INCLUDE_DIRECTORIES(lib)
 
-add_library(homework1 homework1)
-add_library(homework2 homework2)
-add_library(homework3 homework3)
+add_library(engine engine.cpp)
 
 # the only executable file is main.cpp
 add_executable(graphic main)
-add_executable(engine engine.cpp)
-add_executable(mytest mytest.cpp)
 
-target_link_libraries(homework1 myGraphics)
-target_link_libraries(homework2 myGraphics)
-target_link_libraries(homework3 myGraphics)
 target_link_libraries(engine myGraphics)
-target_link_libraries(mytest myGraphics)
-
-target_link_libraries(homework1 illumination)
-target_link_libraries(homework2 illumination)
-target_link_libraries(homework3 illumination)
 target_link_libraries(engine illumination)
-
-target_link_libraries(graphic homework1)
-target_link_libraries(graphic homework2)
-target_link_libraries(graphic homework3)
+target_link_libraries(graphic engine)
