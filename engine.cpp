@@ -71,13 +71,6 @@ bool engine::set_object_position(const char* file_name, const vector<double> pos
         double theta_degree = co_to_degree(_x / sqrt(_x * _x + _y * _y), _y / sqrt(_x * _x + _y * _y));
         new_object.points[i].texture_point.first = _x;
         new_object.points[i].texture_point.second = _z;
-
-//        if(new_object.points[i].texture_point.first < 0.3) {
-//            cout << "(" << new_object.points[i].x << "," << new_object.points[i].y << "," << new_object.points[i].z
-//                 << ")";
-//            cout << new_object.points[i].texture_point.first << "," << new_object.points[i].texture_point.second
-//                 << endl;
-//        }
     }
 
     // save all faces denoted by the point index clockwise
