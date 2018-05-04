@@ -252,6 +252,74 @@ public:
      * scan conversion with z-buffer
      */
     void scan_conversion();
+
+    /**
+     * try depth field
+     * I known I'm kiding myself, todo: read books
+     */
+    void apply_depth_field() {
+
+        uint8_t layer[WINDOW_X][WINDOW_Y][3], blured_layer[WINDOW_X][WINDOW_Y][3];
+
+        for(int i = 0 ; i < WINDOW_X ; ++i) {
+            for(int j = 0 ;j < WINDOW_Y ; ++j) {
+                blured_layer[i][j][0] = pixel_buffer[i][j][0];
+                blured_layer[i][j][1] = pixel_buffer[i][j][1];
+                blured_layer[i][j][2] = pixel_buffer[i][j][2];
+            }
+        }
+
+        double far_depth = 0.940, current_depth = far_depth;
+
+        for(int lay = 0; lay < 9 ; ++lay) {
+            current_depth -= 0.004;
+            int current_color = rand() % 256;
+
+            for(int i = 0 ; i < WINDOW_X ; ++i) {
+                for (int j = 0; j < WINDOW_Y; ++j) {
+                    if(z_buffer[j][i] >= current_depth) {
+                        layer[i][j][0] = blured_layer[i][j][0];
+                        layer[i][j][1] = blured_layer[i][j][1];
+                        layer[i][j][2] = blured_layer[i][j][2];
+                    }
+                }
+            }
+//
+//            // blur the current layer
+            for(int i = 1 ; i < WINDOW_X - 1 ; ++i) {
+                for (int j = 1; j < WINDOW_Y - 1; ++j) {
+                    if(z_buffer[j][i] > current_depth && z_buffer[j-1][i] > current_depth && z_buffer[j+1][i] > current_depth
+                            &&z_buffer[j][i-1] > current_depth && z_buffer[j-1][i-1] > current_depth && z_buffer[j+1][i-1] > current_depth
+                            && z_buffer[j][i+1] > current_depth && z_buffer[j-1][i+1] > current_depth && z_buffer[j+1][i+1] > current_depth) {
+                        blured_layer[i][j][0] =
+                                (layer[i - 1][j - 1][0] + layer[i - 1][j][0] + layer[i - 1][j + 1][0] +
+                                        layer[i][j - 1][0] +
+                                        layer[i][j + 1][0] + layer[i + 1][j - 1][0] + layer[i + 1][j][0] +
+                                        layer[i + 1][j + 1][0]) / 8;
+                        blured_layer[i][j][1] =
+                                (layer[i - 1][j - 1][1] + layer[i - 1][j][1] + layer[i - 1][j + 1][1] +
+                                        layer[i][j - 1][1] +
+                                        layer[i][j + 1][1] + layer[i + 1][j - 1][1] + layer[i + 1][j][1] +
+                                        layer[i + 1][j + 1][1]) / 8;
+                        blured_layer[i][j][2] =
+                                (layer[i - 1][j - 1][2] + layer[i - 1][j][2] + layer[i - 1][j + 1][2] +
+                                        layer[i][j - 1][2] +
+                                        layer[i][j + 1][2] + layer[i + 1][j - 1][2] + layer[i + 1][j][2] +
+                                        layer[i + 1][j + 1][2]) / 8;
+                    }
+                }
+            }
+
+        }
+
+        for(int i = 0 ; i < WINDOW_X ; ++i) {
+            for(int j = 0 ;j < WINDOW_Y ; ++j) {
+                pixel_buffer[i][j][0] = blured_layer[i][j][0];
+                pixel_buffer[i][j][1] = blured_layer[i][j][1];
+                pixel_buffer[i][j][2] = blured_layer[i][j][2];
+            }
+        }
+    }
 };
 
 

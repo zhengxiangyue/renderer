@@ -370,11 +370,9 @@ void engine::scan_conversion() {
                             int texture_x = real_texture_x * each_object.texture_map.size(),
                                     texture_y = real_texture_y * each_object.texture_map[0].size();
 
-                            auto __r = max(min(each_object.texture_map[texture_x][texture_y][0] * inten  + 60,255.0), 0.0);
-                            auto __g = max(min(each_object.texture_map[texture_x][texture_y][1] * inten  + 60,255.0), 0.0);
-                            auto __b = max(min(each_object.texture_map[texture_x][texture_y][2] * inten  + 60,255.0), 0.0);
-
-
+                            auto __r = max(min(each_object.texture_map[texture_x][texture_y][0] * inten  + 40,255.0), 0.0);
+                            auto __g = max(min(each_object.texture_map[texture_x][texture_y][1] * inten  + 40,255.0), 0.0);
+                            auto __b = max(min(each_object.texture_map[texture_x][texture_y][2] * inten  + 40,255.0), 0.0);
 
                             pixel_buffer[ei][l][0] = __r;
                             pixel_buffer[ei][l][1] = __g;
