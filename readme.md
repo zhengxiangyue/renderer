@@ -7,3 +7,4 @@
 
 ![knight2.gif](https://raw.githubusercontent.com/Zhengxiangyue/graphicsAssignments/test/result/texture.gif?raw=true)
 
+![depth.png](https://raw.githubusercontent.com/Zhengxiangyue/renderer/master/result/bigApature.png?raw=true)
