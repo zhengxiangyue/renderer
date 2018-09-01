@@ -322,7 +322,4 @@ public:
     }
 };
 
-
-
-
 #endif //GRAPHIC_ENGINE_H

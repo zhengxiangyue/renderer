@@ -1,0 +1,15 @@
+
+title		
+bounding_box	-.8170652 .7411224  -.159653 .1319491  -.303681 .278291
+detail		/mnt/CISgrads/swhitman/car/black.det
+data_info	0 points 0 polygons
+type		polygon 
+display		scan
+shader		blinn
+blinn_shininess	0.35
+color		.2 .2 .2
+shininess	100
+title		
+data_info	0 points 0 polygons
+Kd	.3
+Ks	.7

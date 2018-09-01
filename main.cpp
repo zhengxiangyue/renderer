@@ -37,7 +37,7 @@ void glut_helper(int argn, char** arguments);
 int main( int argn, char** arguments ) {
 
     _engine.set_object_position("assets/D/knight.d.txt",{3,3,0}, "assets/cola.bmp");
-    _engine.set_object_position("assets/D/knight.d.txt",{0,0,0}, "assets/camo.bmp");
+//    _engine.set_object_position("assets/D/knight.d.txt",{0,0,0}, "assets/camo.bmp");
     _engine.set_object_position("assets/D/king.d.txt",{-3,-3,0}, "assets/KFC.bmp");
     _engine.set_object_position("assets/plane.d.txt",{-3,-3,0}, "const-black");
     _engine.set_object_position("assets/plane.d.txt",{3,3,0}, "const-black");
@@ -52,7 +52,7 @@ int main( int argn, char** arguments ) {
 
     _engine.scan_conversion();
 
-    _engine.apply_depth_field();
+//    _engine.apply_depth_field();
 
     glut_helper(argn, arguments);
 
